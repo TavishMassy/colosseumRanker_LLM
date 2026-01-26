@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from rich.progress import Progress
 
 # --- CONFIGURATION ---
-OPENROUTER_API_KEY = os.getenv("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")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 MODEL_NAME = "meta-llama/llama-3.3-70b-instruct:free"
 DATA_DIR = Path("data")
 PROMPTS_DIR = DATA_DIR / "prompts"
