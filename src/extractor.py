@@ -1,4 +1,5 @@
 import os
+import fitz
 import docx
 import shutil
 import hashlib
@@ -28,17 +29,31 @@ class SmartExtractor:
 
     def _extract_pdf(self, file_path) -> tuple:
         """
-        Extracts PDF content as Markdown to preserve Tables & Headers.
+        Attempt 1: Markdown (Best for AI, preserves tables).
+        Attempt 2: Raw Text (Ugly but reliable fallback).
         """
+        # --- ATTEMPT 1: Markdown (The "Smart" Way) ---
         try:
-            # The 'Secret Weapon' - converts PDF visual layout to Markdown text
             md_text = pymupdf4llm.to_markdown(file_path)
+            # If it found a good amount of text, return it
+            if len(md_text.strip()) > 50:
+                return md_text, "markdown_pdf"
+        except Exception:
+            pass # Markdown failed, proceed to fallback
+
+        # --- ATTEMPT 2: Raw Text (The "Reliable" Way) ---
+        try:
+            doc = fitz.open(file_path)
+            raw_text = ""
+            for page in doc:
+                raw_text += page.get_text()
             
-            # Check for "Zombie PDF" (Image-only scan)
-            if len(md_text.strip()) < 50:
+            # Check if even raw extraction failed
+            if len(raw_text.strip()) < 50:
                 return None, "error_image_pdf"
             
-            return md_text, "markdown_pdf"
+            return raw_text, "raw_text_fallback"
+            
         except Exception as e:
             print(f"   [Error] PDF Fail: {file_path} - {e}")
             return None, "error_pdf"

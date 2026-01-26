@@ -56,7 +56,7 @@ class AgencyControl:
             criteria_text = "Python Developer with AWS and 5 years experience."
 
         scout = SmartScout() # Loads Model
-        scout.filter_candidates(self.candidates_parquet, criteria_text, top_k=50)
+        scout.filter_candidates(self.candidates_parquet, criteria_text, self.top50_parquet, top_k=50)
 
     def run_arbiter(self):
         console.rule("[bold red]Phase 3: The Arbiter[/bold red]")

@@ -62,7 +62,7 @@ class SmartScout:
 
         return masked_text, metadata
 
-    def filter_candidates(self, parquet_file, battle_sheet_text, top_k=50) -> list:
+    def filter_candidates(self, parquet_file, battle_sheet_text, output_file, top_k=50) -> list:
         """
         Input: Path to candidates.parquet, Text of the 'Battle Sheet' (Criteria).
         Output: List of the Top 50 Candidate IDs.

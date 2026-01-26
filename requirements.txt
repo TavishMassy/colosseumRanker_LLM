@@ -5,6 +5,7 @@ pyarrow
 fastparquet
 
 # Extraction & Parsing
+fitz
 pymupdf4llm
 python-docx
 beautifulsoup4
