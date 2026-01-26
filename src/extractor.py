@@ -1,0 +1,167 @@
+import os
+import docx
+import shutil
+import hashlib
+import pymupdf4llm  
+import pandas as pd
+from pathlib import Path
+from rich.progress import track
+
+class SmartExtractor:
+    def __init__(self) -> None:
+        # We focus on these 3 formats.
+        self.supported = {'.pdf', '.docx', '.txt'}
+
+    def _get_hash(self, file_path) -> str:
+        """
+        Creates a unique ID based on file CONTENT, not file NAME.
+        This solves the 'Split Brain' problem.
+        """
+        hasher = hashlib.md5()
+        with open(file_path, 'rb') as f:
+            # Read in chunks to handle large files efficiently
+            buf = f.read(65536)
+            while len(buf) > 0:
+                hasher.update(buf)
+                buf = f.read(65536)
+        return hasher.hexdigest()
+
+    def _extract_pdf(self, file_path) -> tuple:
+        """
+        Extracts PDF content as Markdown to preserve Tables & Headers.
+        """
+        try:
+            # The 'Secret Weapon' - converts PDF visual layout to Markdown text
+            md_text = pymupdf4llm.to_markdown(file_path)
+            
+            # Check for "Zombie PDF" (Image-only scan)
+            if len(md_text.strip()) < 50:
+                return None, "error_image_pdf"
+            
+            return md_text, "markdown_pdf"
+        except Exception as e:
+            print(f"   [Error] PDF Fail: {file_path} - {e}")
+            return None, "error_pdf"
+
+    def _extract_docx(self, file_path) -> tuple:
+        """
+        Fallback for Word Documents.
+        """
+        try:
+            doc = docx.Document(file_path)
+            # Add double newlines to simulate paragraphs for the LLM
+            text = "\n\n".join([p.text for p in doc.paragraphs])
+            
+            if len(text.strip()) < 50:
+                return None, "error_empty_docx"
+                
+            return text, "native_docx"
+        except Exception:
+            return None, "error_docx"
+
+    def _extract_txt(self, file_path) -> tuple:
+        try:
+            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                text = f.read()
+                return text, "native_txt"
+        except Exception:
+            return None, "error_txt"
+
+    def _quarantine_file(self, file_path, reason) -> None:
+        """
+        Moves problematic files (Corrupt, Image-only, or Unknown format)
+        to a 'data/quarantine' folder for manual review.
+        """
+        # 1. Ensure the quarantine directory exists
+        quarantine_dir = Path("data/quarantine")
+        quarantine_dir.mkdir(parents=True, exist_ok=True)
+
+        # 2. Define the destination
+        dest_path = quarantine_dir / file_path.name
+
+        # 3. Move the file
+        try:
+            print(f"   🚫 Quarantining {file_path.name} (Reason: {reason})")
+            # shutil.move handles the physical move of the file
+            shutil.move(str(file_path), str(dest_path))
+        except Exception as e:
+            print(f"   [Error] Could not quarantine file: {e}")
+
+    def run(self, source_folder, output_file) -> pd.DataFrame:
+        data = []
+        folder = Path(source_folder)
+        
+        # Ensure the output folder exists (e.g., data/result/)
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+
+        # Get all supported files
+        files = [f for f in folder.iterdir() if f.suffix.lower() in self.supported]
+        print(f"🏛️  The Gate: Processing {len(files)} resumes from '{source_folder}'...")
+
+        for f in track(files, description="[green]Extracting Resumes..."):
+            # 1. Identity: Create the Immutable Hash
+            try:
+                file_hash = self._get_hash(f)
+            except Exception as e:
+                self._quarantine_file(f, f"Hash Read Error: {e}")
+                continue
+
+            ext = f.suffix.lower()
+            text = None
+            method = "unknown"
+
+            # 2. Extraction Strategy
+            if ext == '.pdf':
+                text, method = self._extract_pdf(f)
+            elif ext == '.docx':
+                text, method = self._extract_docx(f)
+            elif ext == '.txt':
+                text, method = self._extract_txt(f)
+
+            # 3. Quality Gate & Quarantine Logic
+            # If text is None, the extractor methods (above) already flagged it as an error
+            # If text is < 50 chars, we treat it as an "Image PDF" (Zombie)
+            if not text or len(text.strip()) < 50:
+                self._quarantine_file(f, "Empty or Image-based PDF (Text < 50 chars)")
+                continue
+            
+            # If extraction failed specifically (method returned error flag)
+            if "error" in method:
+                 self._quarantine_file(f, f"Extraction Failed ({method})")
+                 continue
+
+            # 4. Store the Valid Data
+            data.append({
+                "id": file_hash,
+                "file_name": f.name,
+                "file_type": ext,
+                "extraction_method": method,
+                "raw_text": text,  # Storing RAW text (Sanitization happens in Arbiter)
+                "content_hash": file_hash
+            })
+
+        # 5. Save
+        if data:
+            df = pd.DataFrame(data)
+            # Remove duplicates based on content hash (Double submission protection)
+            df = df.drop_duplicates(subset=['content_hash'])
+            
+            df.to_parquet(output_file, index=False)
+            
+            print(f"✅ Extraction Complete.")
+            print(f"   - Processed: {len(files)}")
+            print(f"   - Quarantined: {len(files) - len(df)}")
+            print(f"   - Survivors: {len(df)}")
+            print(f"   - Saved to: {output_file}")
+            return df
+        else:
+            print("❌ No valid candidates found. Check 'data/quarantine'.")
+            return None
+
+if __name__ == "__main__":
+    
+    SOURCE_DIR = "data/resumes"
+    OUTPUT_FILE = "data/result/candidates.parquet"
+    
+    extractor = SmartExtractor()
+    extractor.run(SOURCE_DIR, OUTPUT_FILE)

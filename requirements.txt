@@ -1,0 +1,21 @@
+# Data Handling
+pandas
+numpy
+pyarrow
+fastparquet
+
+# Extraction & Parsing
+pymupdf4llm
+python-docx
+beautifulsoup4
+
+# AI & NLP
+sentence-transformers
+scikit-learn
+torch
+
+# Utilities
+phonenumbers
+urlextract
+requests
+rich  # For the UI/Progress Bars
