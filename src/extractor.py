@@ -8,7 +8,7 @@ import pandas as pd
 from pathlib import Path
 from rich.progress import track
 
-class SmartExtractor:
+class ResumeExtractor:
     def __init__(self) -> None:
         # We focus on these 3 formats.
         self.supported = {'.pdf', '.docx', '.txt'}
@@ -178,5 +178,5 @@ if __name__ == "__main__":
     SOURCE_DIR = "data/resumes"
     OUTPUT_FILE = "data/result/candidates.parquet"
     
-    extractor = SmartExtractor()
+    extractor = ResumeExtractor()
     extractor.run(SOURCE_DIR, OUTPUT_FILE)
