@@ -12,7 +12,7 @@ from src.backup_engine import LocalEngine
 
 # --- ENGINE CONFIGURATION ---
 API_KEY = ""
-MODEL_NAME = "gemini-2.0-flash-lite"
+MODEL_NAME = "gemini-flash-latest"
 DAILY_LIMIT = 1000
 Requests_Per_Minute = 15  # Requests Per Minute
 USAGE_FILE = Path("data/usage_log.json")

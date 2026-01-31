@@ -19,7 +19,7 @@ PROMPTS_DIR = DATA_DIR / "prompts"
 RESULT_DIR = DATA_DIR / "result"
 
 # Only these candidates get sorted. Everyone else fights the Gatekeeper.
-WINNERS_CIRCLE_SIZE = 5
+WINNERS_CIRCLE_SIZE = 10
 
 class FactChecker:
     def __init__(self) -> None:

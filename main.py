@@ -242,7 +242,7 @@ class AgencyControl:
         with open(self.sheet_path, 'r') as f: sheet = json.load(f)
         console.print(f"[bold green]📋 Battle Criteria: {sheet['role']}[/bold green]")
 
-        colosseum = Colosseum(df, sheet, MAX_TOURNAMENT_SIZE)
+        colosseum = Colosseum(df, sheet)
         top_10_ids = colosseum.run_tournament(test_mode=False) 
         
         if not top_10_ids: return
@@ -266,6 +266,48 @@ class AgencyControl:
         console.print(Panel("[bold green]Phase 6: Designer (PDF Dossier)[/bold green]", border_style="green"))
         generate_design_pdf()
 
+    def reset_system(self):
+        """Option 9: Factory Reset"""
+        console.print(Panel("[bold red]⚠️  WARNING: FACTORY RESET INITIATED[/bold red]", border_style="red"))
+        console.print("This will PERMANENTLY DELETE all files in:")
+        console.print(f"1. {self.raw_dir} (Resumes)")
+        console.print(f"2. {self.quarantine_dir} (Quarantine)")
+        console.print(f"3. {self.result_dir} (Reports & Databases)")
+        
+        confirm = input("\nType 'RESET' to confirm deletion: ").strip()
+        
+        if confirm != "RESET":
+            console.print("[yellow]🚫 Reset cancelled. Data is safe.[/yellow]")
+            return
+
+        # List of folders to purge
+        folders_to_purge = [self.raw_dir, self.quarantine_dir, self.result_dir]
+        
+        for folder in folders_to_purge:
+            if folder.exists():
+                count = 0
+                for file in folder.iterdir():
+                    if file.is_file():
+                        try:
+                            file.unlink()
+                            count += 1
+                        except Exception as e:
+                            console.print(f"[red]Failed to delete {file.name}: {e}[/red]")
+                console.print(f"   🗑️  Deleted {count} files from [bold]{folder.name}[/bold]")
+        
+        console.print("\n[bold green]✅ System Reset Complete. All data wiped.[/bold green]")
+        console.print("[dim]Exiting application...[/dim]")
+        sys.exit(0)
+
+    def run_lite_pipeline(self):
+        self.run_extractor()  
+        time.sleep(1)
+        self.run_scout()
+        time.sleep(1)
+        self.run_reranker()
+        time.sleep(1)
+        self.export_lite_results()
+
     def run_full_pipeline(self):
         self.run_extractor()  
         time.sleep(1)
@@ -276,6 +318,8 @@ class AgencyControl:
         self.run_colosseum()
         time.sleep(1)
         self.run_auditor()
+        time.sleep(1)
+        self.run_designer()
 
     def menu(self):
         while True:
@@ -284,12 +328,15 @@ class AgencyControl:
                 "2. Scout (25% Filter)\n"
                 "3. Re-Ranker (Top 20)\n"
                 "4. Colosseum (Tournament)\n"
-                "5. Auditor (Deep Analysis)\n"     
-                "6. Run (1-5)\n"
+                "5. Auditor (Deep Analysis)\n"   
+                "---------------------------\n"  
+                "6. Run (1-3 + Lite Report)\n"
+                "7. Run (1-5 + Design PDF)\n"
                 "---------------------------\n"
-                "7. Export Lite Report (Fast CSV)\n"
-                "8. Generate Design PDF\n"
+                "8. Export Lite Report (Fast CSV)\n"
+                "9. Generate Design PDF\n"
                 "---------------------------\n"
+                "[bold red]r. RESET SYSTEM (Empty Folders & Quit)[/bold red]\n"
                 "x. Quit",
                 title="Control Tower",
                 border_style="bold blue"
@@ -301,10 +348,12 @@ class AgencyControl:
             elif choice == "2": self.run_scout()
             elif choice == "3": self.run_reranker()
             elif choice == "4": self.run_colosseum()
-            elif choice == "5": self.run_auditor() 
-            elif choice == "6": self.run_full_pipeline()
-            elif choice == "7": self.export_lite_results()
-            elif choice == "8": generate_design_pdf()
+            elif choice == "5": self.run_auditor()
+            elif choice == "6": self.run_lite_pipeline() 
+            elif choice == "7": self.run_full_pipeline()
+            elif choice == "8": self.export_lite_results()
+            elif choice == "9": generate_design_pdf()
+            elif choice == "r": self.reset_system()
             elif choice == "x": break
 
 if __name__ == "__main__":
