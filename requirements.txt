@@ -1,23 +1,30 @@
-# Data Handling
+# --- Core Data Handling ---
 pandas
 numpy
-pyarrow
 fastparquet
+pyarrow
 
-# Extraction & Parsing
-pymupdf         # Replaces 'fitz' (Critical: 'fitz' is the wrong package name on PyPI)
+# --- Document Processing ---
+pymupdf
 pymupdf4llm
 python-docx
-beautifulsoup4
+fpdf2
+Pillow
 
-# AI & NLP
+# --- AI & Vector Math (Local) ---
 sentence-transformers
 scikit-learn
 torch
 
-# Utilities
-phonenumbers
-urlextract
+# --- AI Engines (Cloud) ---
+# The new 2025 SDK for Gemini
+google-genai
+
+# --- Web & Networking ---
 requests
+beautifulsoup4
+urlextract
+phonenumbers
+
+# --- UI & Utilities ---
 rich
-python-dotenv   # Recommended for managing API keys cleanly

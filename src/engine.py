@@ -1,141 +1,119 @@
 import time
 import json
-import requests
-from src.backup_engine import LocalEngine # ✅ NEW: Import the safety net
+import os
+import sys
+import datetime
+from pathlib import Path
+from google import genai
+from google.genai import types
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src.backup_engine import LocalEngine 
 
 # --- ENGINE CONFIGURATION ---
-API_KEY = "" # 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
-MODEL_NAME = "nvidia/nemotron-3-nano-30b-a3b:free"
+API_KEY = ""
+MODEL_NAME = "gemini-2.0-flash-lite"
+DAILY_LIMIT = 1000
+Requests_Per_Minute = 15  # Requests Per Minute
+USAGE_FILE = Path("data/usage_log.json")
+# ----------------------------
 
 class Engine:
     def __init__(self):
         self.api_key = API_KEY
-        self.model_name = MODEL_NAME
-        self.url = "https://openrouter.ai/api/v1/chat/completions"
-        self.key_url = "https://openrouter.ai/api/v1/auth/key" # ✅ NEW: Fuel Gauge Endpoint
-        
-        self.headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-            "HTTP-Referer": "https://github.com/AgencyControl",
-            "X-Title": "AgencyControl"
-        }
-        self.backup = LocalEngine() # ✅ NEW: Initialize backup
+        self.backup = LocalEngine()
+        self.is_cloud_alive = True
 
-        # 🔍 RUN DIAGNOSTIC ON STARTUP
-        # This checks your fuel (credits) immediately when the program starts.
-        self.is_cloud_alive = self.check_fuel()
+        self.usage = self._load_usage()
+        print(f"   📊 [System] Daily Usage: {self.usage['count']}/{DAILY_LIMIT} (Date: {self.usage['date']})")
 
-    def check_fuel(self):
-        """
-        Checks if the API Key is valid and has credits.
-        Returns True if Cloud is ready, False if we should use Backup.
-        """
-        print("   🔍 [System] Checking Cloud Fuel Gauge...")
-        
-        # If no key is provided, fail immediately to Backup
-        if not self.api_key or len(self.api_key) < 10:
-            print("   ⚠️ [System] No API Key found. Disabling Cloud.")
-            return False
+        if not self.api_key or "AIza" not in self.api_key:
+            print("   ⚠️ [System] Invalid or Missing Google API Key. Disabling Cloud.")
+            self.is_cloud_alive = False
+        else:
+            try:
+                self.client = genai.Client(api_key=self.api_key)
+                if self.is_cloud_alive:
+                    print(f"   ✅ [System] Connected to Google AI ({MODEL_NAME})")
+            except Exception as e:
+                print(f"   ⚠️ [System] Init Failed: {e}")
+                self.is_cloud_alive = False
+
+    def _load_usage(self):
+        """Reads the log file and resets it if the day has changed."""
+        today_str = datetime.date.today().isoformat()
+        default_data = {"date": today_str, "count": 0}
+
+        # Ensure directory exists
+        USAGE_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+        if not USAGE_FILE.exists():
+            self._save_usage(default_data)
+            return default_data
 
         try:
-            response = requests.get(self.key_url, headers=self.headers, timeout=5)
+            with open(USAGE_FILE, 'r') as f:
+                data = json.load(f)
             
-            if response.status_code == 200:
-                data = response.json().get('data', {})
-                limit = data.get('limit')
-                usage = data.get('usage')
-                
-                # Logic: If limit exists and usage >= limit, you are out of credits.
-                # (If limit is None, it usually means unlimited/free tier, which is good).
-                if limit is not None and usage is not None:
-                    remaining = limit - usage
-                    if remaining <= 0:
-                        print("   ❌ [System] Cloud Out of Credits. Disabling Cloud.")
-                        return False
-                
-                print("   ✅ [System] Cloud Connection: ACTIVE")
-                return True
-            else:
-                print(f"   ⚠️ [System] Cloud Auth Failed ({response.status_code}). Disabling Cloud.")
-                return False
-        except Exception as e:
-            print(f"   ⚠️ [System] Cloud Unreachable ({e}). Disabling Cloud.")
-            return False
+            # If dates don't match, it's a new day! Reset to 0.
+            if data.get("date") != today_str:
+                print("   🔄 [System] New Day Detected! Resetting Daily Counter.")
+                self._save_usage(default_data)
+                return default_data
+            
+            return data
+        except:
+            return default_data
 
-    def think(self, prompt_text: str, retries: int = 0) -> dict:
-        # ✅ NEW: STEERING LOGIC
-        # If we already know the cloud is dead/empty, don't waste time waiting 7s.
-        # Go straight to local backup.
+    def _save_usage(self, data):
+        with open(USAGE_FILE, 'w') as f:
+            json.dump(data, f)
+
+    def think(self, prompt_text: str) -> dict:
+        if self.usage['count'] >= DAILY_LIMIT:
+            if self.is_cloud_alive: # Only print this once per run ideally
+                print(f"   🛑 [System] Daily Limit Reached ({DAILY_LIMIT}). Switching to Local Backup.")
+                self.is_cloud_alive = False
+            return self.backup.think(prompt_text)
+
         if not self.is_cloud_alive:
             return self.backup.think(prompt_text)
 
-        MAX_RETRIES = 2 # Reduced slightly so it switches to backup faster
-        
-        payload = {
-            "model": self.model_name,
-            "messages": [
-                {"role": "system", "content": "You are a precise JSON-only extraction engine. You do not speak markdown. You only output valid JSON."},
-                {"role": "user", "content": prompt_text + "\n\nRETURN ONLY RAW JSON."}
-            ],
-            "reasoning": {"enabled": True},
-            "response_format": {"type": "json_object"}
-        }
-
         try:
-            time.sleep(7)  # Preserving your pacing to avoid rate limits
+            time.sleep(60 / Requests_Per_Minute)  # Preserving pacing to avoid rate limits (15 RPM)
             
-            response = requests.post(
-                self.url, 
-                headers=self.headers, 
-                data=json.dumps(payload),
-                timeout=45 
+            response = self.client.models.generate_content(
+                model=MODEL_NAME,
+                contents=f"{prompt_text}\n\nRETURN JSON ONLY.",
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json"
+                )
             )
 
-            # Error Handling
-            if response.status_code != 200:
-                if response.status_code == 429:
-                    if retries >= MAX_RETRIES:
-                        print(f"   ❌ [Engine] Max Retries Hit. Switching to Backup...")
-                        return self.backup.think(prompt_text) # ✅ Failover!
-                    
-                    wait_time = 10 * (retries + 1)
-                    print(f"   ⏳ [Engine] Rate Limit (429). Retrying in {wait_time}s...")
-                    time.sleep(wait_time)
-                    return self.think(prompt_text, retries + 1)
-                
-                print(f"   ⚠️ [Engine] API Error {response.status_code}. Switching to Backup...")
-                return self.backup.think(prompt_text) # ✅ Failover!
+            self.usage['count'] += 1
+            self._save_usage(self.usage)
 
-            # Parsing
-            data = response.json()
-            content = data['choices'][0]['message']['content']
-            
-            # --- ROBUST CLEANER ---
-            if "```json" in content:
-                content = content.split("```json")[1].split("```")[0].strip()
-            elif "```" in content:
-                content = content.split("```")[1].strip()
-            
-            # Find the first '{' and last '}' just in case there is chatty text
-            start = content.find('{')
-            end = content.rfind('}')
-            if start != -1 and end != -1:
-                content = content[start:end+1]
-            # ----------------------
-                
-            return json.loads(content)
+            return json.loads(response.text)
 
         except Exception as e:
-            print(f"   ⚠️ [Engine] Connection Error: {e}. Switching to Backup...")
-            return self.backup.think(prompt_text) # ✅ Failover!
+            # Catching generic errors as specific Google errors have changed locations
+            print(f"   ⚠️ [Engine] Error: {e}. Switching to Backup.")
+            self.is_cloud_alive = False
+            return self.backup.think(prompt_text)
 
+# Testing
 if __name__ == "__main__":
-    print("\n🧪 STARTING HYBRID ENGINE DIAGNOSTICS...")
+    # This block only runs if you execute this specific file
     engine = Engine()
-    print(f"   Primary: {MODEL_NAME}")
-    print(f"   Backup:  Llama 3 (Local)")
     
-    res = engine.think("Return JSON: { 'status': 'online' }")
-    if res: print(f"✅ SUCCESS: {res}")
-    else: print("❌ FAILURE")
+    prompt = """
+    Extract these details from this text:
+    "My name is John Doe, a Python Developer with 5 years of experience."
+    JSON Keys: name, role, years
+    """
+    print(f"Current Count: {engine.usage['count']}")
+    
+    result = engine.think(prompt)
+    print("\n--------- RESULT ---------")
+    print(json.dumps(result, indent=2))
+    print(f"New Count: {engine.usage['count']}")

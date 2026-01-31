@@ -8,11 +8,14 @@ from rich.panel import Panel
 
 # --- IMPORT MODULES ---
 from src.extractor import ResumeExtractor
-from src.oracle import run_oracle_rescue
+from src.oracle import run_oracle_rescue  
 from src.scout import SmartScout
 from src.reranker import ReRanker
-from src.arbiter import Colosseum
-from src.forensics import run_forensics as launch_forensics
+from src.colosseum import Colosseum
+from src.auditor import Auditor
+from src.designer import generate_design_pdf
+
+from src.backup_engine import LocalEngine
 
 # --- CONFIGURATION ---
 DATA_DIR = Path("data")
@@ -20,7 +23,7 @@ RAW_DIR = DATA_DIR / "resumes"
 RESULT_DIR = DATA_DIR / "result"
 SHEET_PATH = DATA_DIR / "job_data" / "battle_sheet.json"
 
-# 🔒 SAFETY VALVE: The Arbiter will NEVER fight more than this many people.
+# 🔒 SAFETY VALVE: Colosseum will NEVER fight more than this many people.
 # This protects your wallet/CPU even if you input 10,000 resumes.
 MAX_TOURNAMENT_SIZE = 20
 
@@ -55,43 +58,11 @@ class AgencyControl:
         else:
              console.print("[red]❌ Extraction failed or no resumes found.[/red]")
 
-    def run_rescue(self):
-        console.print(Panel("[bold purple]Phase 1.5: Vision Rescue (Oracle)[/bold purple]", border_style="purple"))
-        
-        # 1. Run the Vision Rescue
-        rescued_path = run_oracle_rescue()
-        
-        # 2. If no files were rescued, we are done
-        if not rescued_path or not rescued_path.exists():
-            return
-
-        # 3. THE MERGE LOGIC
-        main_path = self.result_dir / "candidates.parquet"
-        
-        if main_path.exists():
-            console.print("🔄 Merging rescued candidates into main pool...")
-            
-            # Load both
-            df_main = pd.read_parquet(main_path)
-            df_rescue = pd.read_parquet(rescued_path)
-            
-            # Combine
-            df_combined = pd.concat([df_main, df_rescue], ignore_index=True)
-            
-            # Deduplicate (Safety check by ID)
-            df_combined = df_combined.drop_duplicates(subset=['id'])
-            
-            # Overwrite the main file so Scout sees everyone
-            df_combined.to_parquet(main_path, index=False)
-            
-            console.print(f"✅ Merge Complete. Total Candidates: {len(df_combined)} (+{len(df_rescue)} rescued)")
-        else:
-            # If main file doesn't exist for some reason, just use the rescued one
-            df_rescue.to_parquet(main_path, index=False)
-            console.print(f"✅ Main file created from rescued candidates.")
+        # Run Oracle Rescue immediately after extraction
+        run_oracle_rescue()
 
     def run_scout(self):
-        console.print(Panel("[bold magenta]Phase 2: The Scout[/bold magenta]", border_style="magenta"))
+        console.print(Panel("[bold magenta]Phase 3: The Scout[/bold magenta]", border_style="magenta"))
         
         input_path = self.result_dir / "candidates.parquet"
         if not input_path.exists():
@@ -117,7 +88,12 @@ class AgencyControl:
 
         with open(self.sheet_path, 'r') as f:
             sheet = json.load(f)
-            criteria_text = f"{sheet['role']} {sheet['must_haves']}"
+            
+            # --- THE FIX: USE THE VECTOR SUMMARY ---
+            # If the summary exists, use it. Otherwise, fall back to Role + Skills.
+            criteria_text = sheet.get('summary_for_vector_search', f"{sheet['role']} {sheet['must_haves']}")
+            
+            console.print(f"[cyan]🧠 Scout aiming for: {criteria_text[:100]}...[/cyan]")
 
         scout = SmartScout()
         output_path = self.result_dir / "candidates_scouted.parquet"
@@ -130,7 +106,7 @@ class AgencyControl:
         )
 
     def run_reranker(self):
-        console.print(Panel("[bold yellow]Phase 2.5: The Re-Ranker (Precision Filter)[/bold yellow]", border_style="yellow"))
+        console.print(Panel("[bold yellow]Phase 4: The Re-Ranker (Precision Filter)[/bold yellow]", border_style="yellow"))
         
         input_path = self.result_dir / "candidates_scouted.parquet"
         if not input_path.exists(): return
@@ -159,8 +135,100 @@ class AgencyControl:
             top_k=target_k 
         )
 
-    def run_arbiter(self):
-        console.print(Panel("[bold red]Phase 3: The Arbiter (LLM Tournament)[/bold red]", border_style="red"))
+    def _scan_keywords(self, text, keywords):
+        """Helper for Lite Report (Regex Scan)"""
+        if not text or not isinstance(text, str): return ""
+        found = set() # Use set to avoid duplicates
+        text_lower = text.lower()
+        for kw in keywords:
+            # Simple substring match (fast)
+            if kw.lower() in text_lower:
+                found.add(kw)
+        return ", ".join(list(found))
+
+    def _parse_contact(self, contact_data, key):
+        """Helper to safely extract email/phone from the contact_info dictionary/string"""
+        try:
+            # If it's a string (JSON), parse it first
+            if isinstance(contact_data, str):
+                import json
+                data = json.loads(contact_data)
+            elif isinstance(contact_data, dict):
+                data = contact_data
+            else:
+                return ""
+            
+            # Extract the specific key (emails, phones, links)
+            items = data.get(key, [])
+            if isinstance(items, list):
+                return " | ".join(items)
+            return str(items)
+        except:
+            return ""
+
+    def export_lite_results(self):
+        """Option 8: Fast Export (Dynamic Keywords + Contact Info)"""
+        input_path = self.result_dir / "candidates_reranked.parquet"
+        if not input_path.exists():
+            console.print("[red]❌ No Re-Ranked candidates found.[/red]")
+            return
+
+        df = pd.read_parquet(input_path)
+        
+        # 1. LOAD DYNAMIC KEYWORDS FROM BATTLE SHEET
+        target_skills = []
+        if self.sheet_path.exists():
+            try:
+                with open(self.sheet_path, 'r') as f:
+                    sheet = json.load(f)
+                    # Get keywords from the new JSON field, fallback to must_haves if missing
+                    target_skills = sheet.get('keywords_for_scan', sheet.get('must_haves', []))
+                    console.print(f"[green]📋 Loaded {len(target_skills)} keywords from Battle Sheet.[/green]")
+            except Exception as e:
+                console.print(f"[yellow]⚠️ Could not load keywords from sheet: {e}[/yellow]")
+        
+        # Fallback if sheet is empty
+        if not target_skills:
+            target_skills = ["Python", "Java", "SQL", "AWS"] # Generic fallback
+            console.print("[yellow]⚠️ Using generic fallback keywords.[/yellow]")
+
+        console.print(f"[yellow]🔍 Scanning for: {target_skills[:5]}...[/yellow]")
+        
+        # 2. APPLY SCANNERS
+        df['Detected Skills'] = df['safe_text'].apply(lambda x: self._scan_keywords(x, target_skills))
+        
+        # 3. EXTRACT CONTACT INFO
+        # The 'contact_info' column usually contains JSON. We need to parse it.
+        df['Emails'] = df['contact_info'].apply(lambda x: self._parse_contact(x, 'emails'))
+        df['Phones'] = df['contact_info'].apply(lambda x: self._parse_contact(x, 'phones'))
+        df['Links']  = df['contact_info'].apply(lambda x: self._parse_contact(x, 'links'))
+
+        # 4. RENAME & SELECT COLUMNS
+        df.rename(columns={'rerank_score': 'AI Match Score'}, inplace=True)
+        
+        # Use 'file_name' if it exists, otherwise fallback to 'meta_name' or 'id'
+        if 'file_name' not in df.columns:
+            df['file_name'] = df['meta_name'] # Fallback
+            
+        report_cols = [
+            'AI Match Score', 
+            'file_name',      
+            'Detected Skills', 
+            'Emails',          
+            'Phones',          
+            'Links',           
+            'evidence'         
+        ]
+        
+        # Handle missing cols gracefully (e.g. if 'evidence' hasn't been generated yet)
+        existing_cols = [c for c in report_cols if c in df.columns]
+        
+        csv_path = self.result_dir / "Shortlist_Report_Lite.csv"
+        df[existing_cols].to_csv(csv_path, index=False)
+        console.print(Panel(f"✅ Lite Report Generated!\n📂 {csv_path}\nIncluding: Emails, Phones, and {len(target_skills)} Keywords", border_style="green"))
+
+    def run_colosseum(self):
+        console.print(Panel("[bold red]Phase 4: The Colosseum (LLM Tournament)[/bold red]", border_style="red"))
         
         reranked_file = self.result_dir / "candidates_reranked.parquet"
         
@@ -174,7 +242,7 @@ class AgencyControl:
         with open(self.sheet_path, 'r') as f: sheet = json.load(f)
         console.print(f"[bold green]📋 Battle Criteria: {sheet['role']}[/bold green]")
 
-        colosseum = Colosseum(df, sheet)
+        colosseum = Colosseum(df, sheet, MAX_TOURNAMENT_SIZE)
         top_10_ids = colosseum.run_tournament(test_mode=False) 
         
         if not top_10_ids: return
@@ -190,34 +258,39 @@ class AgencyControl:
         final_df[cols_to_keep].to_json(self.result_dir / "final_report.json", orient='records', indent=2)
         console.print(Panel(f"🏆 [bold]Tournament Complete! Report Generated.[/bold]", border_style="green"))
 
-    def run_forensics(self):
-        console.print(Panel("[bold purple]Phase 5: Forensics (Deep Analysis)[/bold purple]", border_style="purple"))
-        launch_forensics()
+    def run_auditor(self):
+        console.print(Panel("[bold purple]Phase 5: Auditor (Deep Analysis)[/bold purple]", border_style="purple"))
+        Auditor(MAX_TOURNAMENT_SIZE).generate_report()
+
+    def run_designer(self):
+        console.print(Panel("[bold green]Phase 6: Designer (PDF Dossier)[/bold green]", border_style="green"))
+        generate_design_pdf()
 
     def run_full_pipeline(self):
-        self.run_extractor()
-        time.sleep(1)
-        self.run_rescue()     
+        self.run_extractor()  
         time.sleep(1)
         self.run_scout()
         time.sleep(1)
         self.run_reranker()
         time.sleep(1)
-        self.run_arbiter()
+        self.run_colosseum()
         time.sleep(1)
-        self.run_forensics()
+        self.run_auditor()
 
     def menu(self):
         while True:
             console.print(Panel.fit(
                 "1. Extractor (PDF -> Text)\n"
-                "2. Vision Rescue (Quarantine -> Text)\n"
-                "3. Scout (25% Filter)\n"
-                "4. Re-Ranker (Top 20)\n"
-                "5. Arbiter (Tournament)\n"
-                "6. Forensics (Deep Analysis)\n"     
-                "7. Run ALL\n"
-                "q. Quit",
+                "2. Scout (25% Filter)\n"
+                "3. Re-Ranker (Top 20)\n"
+                "4. Colosseum (Tournament)\n"
+                "5. Auditor (Deep Analysis)\n"     
+                "6. Run (1-5)\n"
+                "---------------------------\n"
+                "7. Export Lite Report (Fast CSV)\n"
+                "8. Generate Design PDF\n"
+                "---------------------------\n"
+                "x. Quit",
                 title="Control Tower",
                 border_style="bold blue"
             ))
@@ -225,13 +298,14 @@ class AgencyControl:
             choice = input("Option: ").strip().lower()
             
             if choice == "1": self.run_extractor()
-            elif choice == "2": self.run_rescue()
-            elif choice == "3": self.run_scout()
-            elif choice == "4": self.run_reranker()
-            elif choice == "5": self.run_arbiter()
-            elif choice == "6": self.run_forensics() 
-            elif choice == "7": self.run_full_pipeline()
-            elif choice == "q": break
+            elif choice == "2": self.run_scout()
+            elif choice == "3": self.run_reranker()
+            elif choice == "4": self.run_colosseum()
+            elif choice == "5": self.run_auditor() 
+            elif choice == "6": self.run_full_pipeline()
+            elif choice == "7": self.export_lite_results()
+            elif choice == "8": generate_design_pdf()
+            elif choice == "x": break
 
 if __name__ == "__main__":
     app = AgencyControl()

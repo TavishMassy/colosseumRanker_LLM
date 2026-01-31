@@ -7,9 +7,11 @@ You are an Expert Recruitment Architect. I will give you a raw Job Description a
 
 **JSON Structure Requirements:**
 - "role": The standardized job title.
+- "location_preference": e.g. 'Remote', 'NYC Only', 'Hybrid in London'
 - "summary_for_vector_search": A rich, 3-sentence summary of the perfect candidate. Include key skills, seniority, and industry context. (This will be used for semantic embedding).
 - "must_haves": A list of 3-5 non-negotiable hard skills or certifications.
 - "nice_to_haves": A list of bonus skills.
+- "keywords_for_scan": A list of 10-20 single-word technical keywords (e.g., "Python", "AWS", "Salesforce", "CPR") extracted from the JD. These will be used for high-speed regex scanning.
 - "deal_breakers": A list of "Anti-Persona" traits (e.g., "Job Hopper", "No Portfolio", "Lack of relevant degree" if applicable).
 - "cultural_vibe": A short description of the company culture inferred from the text.
 

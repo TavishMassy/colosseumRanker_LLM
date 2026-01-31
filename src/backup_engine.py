@@ -4,13 +4,13 @@ import requests
 class LocalEngine:
     def __init__(self):
         self.ollama_url = "http://localhost:11434/api/generate"
-        self.model = "llama3"  # The 8B model that fits your RAM
+        self.model =  "llama3" # "phi3"  # The 8B model that fits your RAM
 
     def think(self, prompt_text: str) -> dict:
         """
         FALLBACK: Runs locally on CPU via Ollama.
         """
-        print("   🛡️ [System] Engaging Local Backup (Ollama)...")
+        print("   🛡️ [System] Engaging Local Backup...")
         
         payload = {
             "model": self.model,
@@ -18,14 +18,15 @@ class LocalEngine:
             "format": "json",
             "stream": False,
             "options": {
-                "temperature": 0.1, 
+                "temperature": 0.0, 
                 "num_ctx": 2048, #4096 
-                "num_thread": 4 #none
+                "num_thread": 7, #none
+                "num_predict": 500
             }
         }
 
         try:
-            response = requests.post(self.ollama_url, json=payload, timeout=120)
+            response = requests.post(self.ollama_url, json=payload, timeout=360) # 6 minutes
             if response.status_code == 200:
                 return self._clean_json(response.json().get('response', ''))
             else:
