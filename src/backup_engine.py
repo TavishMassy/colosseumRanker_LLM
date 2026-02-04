@@ -16,10 +16,11 @@ class LocalEngine:
             "model": self.model,
             "prompt": prompt_text + "\n\nCRITICAL: Return ONLY valid JSON. No markdown.",
             "format": "json",
+            "keep_alive": "3m", 
             "stream": False,
             "options": {
                 "temperature": 0.0, 
-                "num_ctx": 2048, #4096 
+                "num_ctx": 2048, # 4096
                 "num_thread": 7, #none
                 "num_predict": 500
             }

@@ -1,0 +1,46 @@
+{
+  "role": "Junior Web Developer",
+  "summary_for_vector_search": "An ambitious early-career developer with a solid foundation in core frontend technologies (HTML, CSS, JavaScript) and exposure to modern libraries like React or Vue. The ideal candidate demonstrates a strong aptitude for learning, actively contributes to codebases via Git, and showcases technical competence through a personal portfolio or GitHub activity. They should be prepared to thrive in a collaborative, agile environment where mentorship and rapid skill acquisition are key components of the role.",
+  "must_haves": [
+    "Proficiency in HTML5 and CSS3 (Flexbox/Grid)",
+    "Strong grasp of JavaScript (ES6+ syntax)",
+    "Basic experience with a modern framework (React.js, Vue.js, or Angular)",
+    "Version Control knowledge (Git/GitHub flows)",
+    "Understanding of Responsive Web Design principles"
+  ],
+  "nice_to_haves": [
+    "Experience with TypeScript",
+    "Basic Backend knowledge (Node.js, Python, or PHP)",
+    "Familiarity with CSS Preprocessors (SASS/LESS) or Tailwind",
+    "Understanding of RESTful APIs",
+    "Exposure to UI/UX design tools (Figma, Adobe XD)"
+  ],
+  "keywords_for_scan": [
+    "HTML5",
+    "CSS3",
+    "JavaScript",
+    "ES6",
+    "React",
+    "Vue",
+    "Angular",
+    "Git",
+    "GitHub",
+    "Responsive",
+    "Frontend",
+    "DOM",
+    "JSON",
+    "API",
+    "Bootstrap",
+    "Tailwind",
+    "Agile",
+    "Debugging",
+    "NPM",
+    "Webpack"
+  ],
+  "deal_breakers": [
+    "Zero knowledge of Version Control (Git)",
+    "Inability to explain basic DOM manipulation",
+    "Lack of foundational HTML/CSS knowledge (relying solely on drag-and-drop tools)"
+  ],
+  "cultural_vibe": "Growth-oriented and mentorship-focused environment that values curiosity, proactive problem-solving, and the ability to adapt quickly to new technologies."
+}

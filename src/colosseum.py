@@ -1,4 +1,3 @@
-import sys
 import os
 import time
 import json
@@ -8,9 +7,9 @@ import pandas as pd
 from pathlib import Path
 from bs4 import BeautifulSoup
 from rich.progress import Progress
+from playwright.sync_api import sync_playwright
 
 # Import the Engine
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.engine import Engine
 
 # --- CONFIGURATION ---
@@ -18,35 +17,53 @@ DATA_DIR = Path("data")
 PROMPTS_DIR = DATA_DIR / "prompts"
 RESULT_DIR = DATA_DIR / "result"
 
+# For jr/mid level roles and 5000 for senior ones
+RESUME_SIZE = 3000
+
 # Only these candidates get sorted. Everyone else fights the Gatekeeper.
 WINNERS_CIRCLE_SIZE = 10
 
 class FactChecker:
     def __init__(self) -> None:
         self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         }
 
-    def verify_link(self, url) -> str:
-        if "linkedin.com" in url or "twitter.com" in url:
-             return "Social Profile (Skipped)"
+    def scrape_text(self, url) -> str:
+        """Launches a browser to extract visible text from a website."""
+        # Skip social media - anti-scraping is too high and text isn't useful for 'evidence'
+        if any(domain in url.lower() for domain in ["linkedin.com", "twitter.com", "facebook.com"]):
+            return f"Social Profile Verified: {url}"
+
         try:
-            time.sleep(random.uniform(0.5, 1.0))
-            response = requests.get(url, headers=self.headers, timeout=5)
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.text, 'html.parser')
-                title = soup.title.string.strip() if soup.title else "No Title"
-                return f"Verified Live: {title}"
-            elif response.status_code == 404:
-                return "Dead Link (404)"
-            else:
-                return f"Broken Link ({response.status_code})"
+            with sync_playwright() as p:
+                # Use a real browser to handle React/Vue/Next.js portfolios
+                browser = p.chromium.launch(headless=True)
+                page = browser.new_page()
+                
+                # Navigate and wait until the network is quiet (10s timeout)
+                page.goto(url, wait_until="networkidle", timeout=10000)
+                
+                # Extract text from the body to avoid <script> and <style> tags
+                raw_text = page.inner_text("body")
+                
+                # Clean up whitespace and limit length to avoid 'Token Bloat' in the AI
+                clean_text = " ".join(raw_text.split())
+                browser.close()
+                
+                return f"SCRAPED CONTENT: {clean_text[:1500]}..." # First 1500 chars is plenty
         except Exception as e:
-            return f"Link Unreachable ({str(e)})"
+            return f"Scrape Failed ({str(e)[:30]})"
 
 class Colosseum:
     def __init__(self, candidates_df, battle_sheet) -> None:
         self.df = candidates_df.copy()
+
+        if (RESULT_DIR / "candidates_processed.parquet").exists():            
+            self.df_processed = pd.read_parquet(RESULT_DIR / "candidates_processed.parquet")
+        else:
+            self.df_processed = None
+
         self.sheet = battle_sheet
         self.investigator = FactChecker()
         
@@ -54,8 +71,8 @@ class Colosseum:
         self.engine = Engine()
         
         self.prompts = {
-            "newcomer": self._load_prompt("judge_newcomer.txt"),
-            "gatekeeper": self._load_prompt("judge_gatekeeper.txt"),
+            # "newcomer": self._load_prompt("judge_newcomer.txt"),
+            # "gatekeeper": self._load_prompt("judge_gatekeeper.txt"),
             "ranker": self._load_prompt("judge_ranker.txt")
         }
 
@@ -69,7 +86,7 @@ class Colosseum:
         path = PROMPTS_DIR / filename
         if not path.exists():
             # Fallback
-            return "Compare {{text_a}} and {{text_b}}. Return JSON with winner_id."
+            raise FileNotFoundError(f"❌ Prompt template not found at: {path}")
         with open(path, 'r') as f:
             return f.read()
 
@@ -112,28 +129,55 @@ class Colosseum:
             self.df.at[idx, 'evidence'] = "No links provided."
             return
 
-        # 5. Link Verification Pass
-        print(f"   🔎 {candidate_id[:6]}: Found {len(links)} links. Searching...")
+        # 5. Link Scraping Pass
+        print(f"   🔎 {candidate_id[:6]}: Deep-scanning portfolio content...")
         evidence_list = []
         
-        # Limit to first 2 links to save time/requests
-        for link in links[:2]: 
+        for link in links:
             if not isinstance(link, str) or not link.startswith('http'):
                 continue
-            status = self.investigator.verify_link(link)
-            evidence_list.append(f"{link} -> {status}")
+            
+            # CALL THE NEW SCRAPER
+            content = self.investigator.scrape_text(link)
+            evidence_list.append(f"SOURCE [{link}]: {content}")
             
         if evidence_list:
             self.df.at[idx, 'evidence'] = " | ".join(evidence_list)
         else:
-            self.df.at[idx, 'evidence'] = "No valid links found."
+            self.df.at[idx, 'evidence'] = "No valid portfolio data found."
             
         print(f"   ✅ Evidence Logged.")
+
+    def purge_high_risk(self):
+        """Disqualifies candidates flagged as High Risk by the Auditor."""
+        print(f"🛡️  Security Sweep: Auditing candidate risk levels...")
+        
+        disqualified_count = 0
+        
+        for idx, row in self.df.iterrows():
+            meta = {}
+            if 'metadata' in row and pd.notna(row['metadata']):
+                try:
+                    meta = json.loads(row['metadata'])
+                except:
+                    pass
+            
+            # 🚨 DISQUALIFICATION TRIGGER
+            if meta.get('risk') == "High":
+                reason = meta.get('risk_reason', 'Flagged by security audit')
+                self._log_event(row['id'], f"🚫 DISQUALIFIED: {reason}")
+                # Move them to a rank that is impossible to reach (e.g., 999)
+                self.df.at[idx, 'rank'] = 999 
+                disqualified_count += 1
+        
+        # Remove them from the active queue for the run_tournament loop
+        self.df = self.df[self.df['rank'] != 999].reset_index(drop=True)
+        print(f"✅ Sweep Complete: {disqualified_count} high-risk candidates removed.")
 
     def _get_dossier(self, candidate_id) -> str:
         self._ensure_evidence(candidate_id)
         row = self.df.loc[self.df['id'] == candidate_id].iloc[0]
-        return f"ID: {row['id']}\nRESUME CONTENT: {row['safe_text'][:3000]}\nVERIFIED LINKS: {row['evidence']}"
+        return f"ID: {row['id']}\nRESUME CONTENT: {row['safe_text'][:RESUME_SIZE]}\nVERIFIED LINKS: {row['evidence']}"
 
     def _battle(self, id_a, id_b, mode="gatekeeper"):
         role_context = f"""
@@ -145,15 +189,9 @@ class Colosseum:
         Location Preference: {self.sheet.get('location_preference', 'Any')}
         """
         
-        if mode == "newcomer":
-            prompt_template = self.prompts['newcomer']
-        elif mode == "ranker":
-            prompt_template = self.prompts['ranker']
-        else:
-            prompt_template = self.prompts['gatekeeper']
+        prompt_template = self.prompts['ranker']
 
         prompt = prompt_template.replace("{{role}}", role_context)
-        prompt = prompt.replace("{{must_haves}}", str(self.sheet.get('must_haves')))
         prompt = prompt.replace("{{text_a}}", self._get_dossier(id_a))
         prompt = prompt.replace("{{text_b}}", self._get_dossier(id_b))
         
@@ -163,6 +201,9 @@ class Colosseum:
             print(f"\n🚨 [CRITICAL ERROR] The AI Engine is unresponsive.")
             # Default to A winning to prevent crash, but log it
             return {"winner_id": id_b, "reason": "AI Failed, Default Win to Gatekeeper."}
+
+        if isinstance(result, list) and len(result) > 0:
+            result = result[0]
 
         return result
 
@@ -210,6 +251,8 @@ class Colosseum:
         return low
 
     def run_tournament(self, test_mode=False) -> list:
+        self.purge_high_risk()
+
         candidates = self.df['id'].tolist()
         if not candidates:
             print("[red]❌ No candidates to fight![/red]")
@@ -220,15 +263,15 @@ class Colosseum:
         print(f"🏟️  The Colosseum is Open. {len(candidates)} candidates queuing...")
         print(f"🛡️  Winner's Circle Size: {WINNERS_CIRCLE_SIZE}")
         
-        ranked_list = [] 
-        
+        ranked_list = []
+
         with Progress() as progress:
             task = progress.add_task("[red]⚔️  Tournament in Progress...", total=len(candidates))
 
             for newcomer_id in candidates:
                 cand_name = newcomer_id[:6]
                 
-                # --- PHASE 1: BUILD THE LIST (< 10) ---
+                # --- BUILD THE LIST ---
                 if len(ranked_list) < WINNERS_CIRCLE_SIZE:
                     if not ranked_list:
                         ranked_list.append(newcomer_id)
@@ -241,7 +284,7 @@ class Colosseum:
                         rank_display = insert_pos + 1
                         self._log_event(newcomer_id, f"🏅 Placed at Rank #{rank_display}")
 
-                # --- PHASE 2: GATEKEEPER MODE (>= 10) ---
+                # --- GATEKEEPER MODE (>= 10) ---
                 else:
                     gatekeeper_id = ranked_list[-1] # The person at Rank #10
                     print(f"\n🛡️  Gatekeeper Challenge: {cand_name} vs Rank #{WINNERS_CIRCLE_SIZE} ({gatekeeper_id[:6]})")
@@ -285,14 +328,16 @@ class Colosseum:
         
         # 1. Map Top 10 to Ranks 1-10
         rank_map = {cid: i for i, cid in enumerate(ranked_list, 1)}
-        
-        # 2. Assign Ranks. Losers get Rank 999
-        self.df['rank'] = self.df['id'].map(rank_map).fillna(999).astype(int)
-        
-        # 3. Sort: Rank 1, 2... 10... 999, 999
+
+        # 2. Identify candidates NOT in the Top 10
+        remaining_candidates = self.df[~self.df['id'].isin(ranked_list)].copy()
+
+        # 3. Sort: Rank 1, 2.. 10, 11....
+        for i, (idx, row) in enumerate(remaining_candidates.iterrows(), start=WINNERS_CIRCLE_SIZE + 1):
+            rank_map[row['id']] = i     
+            
+        # 4. Apply the map and sort
+        self.df['rank'] = self.df['id'].map(rank_map).astype(int)
         self.df = self.df.sort_values('rank', ascending=True)
-        
-        self.df.to_parquet(RESULT_DIR / "candidates_processed.parquet", index=False)
-        print(f"✅ Tournament Complete. Top {len(ranked_list)} Survivors sorted at the top.")
 
         return ranked_list

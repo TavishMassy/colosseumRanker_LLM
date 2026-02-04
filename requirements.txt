@@ -17,14 +17,15 @@ scikit-learn
 torch
 
 # --- AI Engines (Cloud) ---
-# The new 2025 SDK for Gemini
 google-genai
+python-dotenv
 
 # --- Web & Networking ---
 requests
 beautifulsoup4
 urlextract
 phonenumbers
+playwright
 
 # --- UI & Utilities ---
 rich

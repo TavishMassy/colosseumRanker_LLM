@@ -113,10 +113,15 @@ class ResumeExtractor:
         files = [f for f in folder.iterdir() if f.suffix.lower() in self.supported]
         print(f"🏛️  The Gate: Processing {len(files)} resumes from '{source_folder}'...")
 
+        seen_hashes = set()
         for f in track(files, description="[green]Extracting Resumes..."):
             # 1. Identity: Create the Immutable Hash
             try:
                 file_hash = self._get_hash(f)
+                if file_hash in seen_hashes:
+                    self._quarantine_file(f, "Duplicate Content (MD5 Match)")
+                    continue
+                seen_hashes.add(file_hash)
             except Exception as e:
                 self._quarantine_file(f, f"Hash Read Error: {e}")
                 continue
