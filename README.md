@@ -1,7 +1,3 @@
-Here is a professional, comprehensive `README.md` for your project. You can save this file directly in your root folder.
-
----
-
 # 🏛️ The Colosseum: Agentic AI Recruitment Arbiter
 
 **The Colosseum** is a locally-hosted, privacy-first AI recruitment system that turns a folder of raw PDFs into a ranked list of the Top 10 candidates.
@@ -25,7 +21,7 @@ Unlike standard ATS tools that rely on keyword matching, The Colosseum uses a **
 ### 1. Prerequisites
 
 * Python 3.10+
-* An [OpenRouter API Key](https://openrouter.ai/) (for Llama 3.3 70B).
+* An [Gemini API Key](https://aistudio.google.com/).
 
 ### 2. Setup
 
@@ -38,13 +34,6 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # 2. Install requirements
 pip install -r requirements.txt
-
-# 3. Set your API Key
-# On Mac/Linux:
-export OPENROUTER_API_KEY="sk-or-your-key-here"
-# On Windows (Powershell):
-$env:OPENROUTER_API_KEY="sk-or-your-key-here"
-
 ```
 
 ### 3. Folder Structure
