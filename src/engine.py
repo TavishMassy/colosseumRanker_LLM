@@ -1,6 +1,7 @@
 import json
 import sys
 import os
+import random
 import time
 import datetime
 import threading
@@ -14,8 +15,9 @@ from src.backup_engine import LocalEngine
 
 # --- ENGINE CONFIGURATION ---
 API_KEY = ""
-MODEL_NAME = "gemini-2.0-flash-lite"
-TOKEN_LIMIT = 400000
+MODEL_NAME = "gemini-flash-latest"
+VLM_NAME = "gemini-flash-lite-latest"
+TOKEN_LIMIT = 800000
 USAGE_FILE = Path("data/usage_log.json")
 # ----------------------------
 
@@ -27,7 +29,6 @@ class Engine:
         self.lock = threading.Lock()
 
         self.usage = self._load_usage()
-        # FIX: Reference total_tokens instead of count
         print(f"   📊 [System] Daily Usage: {self.usage['total_tokens']}/{TOKEN_LIMIT} (Date: {self.usage['date']})")
 
         if not self.api_key or "AIza" not in self.api_key:
@@ -86,11 +87,10 @@ class Engine:
 
         for attempt in range(2):
 
-            # 1. PACING: Adhere to 4000 RPM (approx 15ms delay)
-            time.sleep(1)
+            time.sleep(random.uniform(0.5, 2.0))
             try:
                 # 2. DISPATCH: Use google-genai for strictly formatted JSON
-                print(f" 🤖 [System] Dispatching Request...")
+                # print(f" 🤖 [System] Dispatching Request...")
                 response = self.client.models.generate_content(
                     model=MODEL_NAME,
                     contents=f"{prompt_text}\n\nRETURN JSON ONLY.",
@@ -116,6 +116,10 @@ class Engine:
         return self.backup.think(prompt_text)
 
     def see(self, image_path, prompt):
+        if not self.is_cloud_alive:
+            print("⚠️ Cloud disabled. Vision request skipped.")
+            return None
+
         """Multimodal Vision capability for image-based resumes."""
         if self.usage['total_tokens'] >= TOKEN_LIMIT:
             print("🛑 Budget Exceeded. Vision rescue aborted.")
@@ -125,11 +129,13 @@ class Engine:
         pil_image = Image.open(image_path)
 
         for attempt in range(1):
-            time.sleep(1) # (60 / 4000)
+            
+            time.sleep(random.uniform(0.5, 2.0))
             try:
+                print(f" 🤖 [System] Dispatching Request... (VLM)")
                 # Using the new google-genai SDK logic
                 response = self.client.models.generate_content(
-                    model=MODEL_NAME,
+                    model=VLM_NAME,
                     contents=[prompt, pil_image],
                     config=types.GenerateContentConfig(
                         response_mime_type="application/json"
@@ -144,9 +150,9 @@ class Engine:
                 return json.loads(response.text)
             except Exception as e:
                 print(f" ⚠️ [Engine] Cloud Attempt {attempt + 1} failed: {str(e)}...")
-                time.sleep(60)
+                time.sleep(10)
         
-        print(f" ❌ [Engine] Cloud exhausted. Switching to Local Backup.")
+        print(f" ❌ [Engine] Cloud exhausted.")
         return None
 
 # Testing

@@ -4,7 +4,7 @@ import requests
 class LocalEngine:
     def __init__(self):
         self.ollama_url = "http://localhost:11434/api/generate"
-        self.model =  "llama3" # "phi3"  # The 8B model that fits your RAM
+        self.model =  "llama3" # "phi3"  # The 8B model that fits RAM
 
     def think(self, prompt_text: str) -> dict:
         """

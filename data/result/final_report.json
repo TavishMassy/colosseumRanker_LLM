@@ -2,270 +2,81 @@
   {
     "rank":1,
     "battle_log":[
-      "\u2705 BEAT Rank #4 (e83172): This candidate is the superior investment because ...",
-      "\u2705 BEAT Rank #2 (a5818f): This candidate is the superior investment because ...",
-      "\u2705 BEAT Rank #1 (1d27ac): This candidate is the superior investment because ...",
+      "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
+      "\u2705 BEAT Rank #2 (3ff4d7): CANDIDATE_f7c91ccacd4ef279ac730bc8d114b77a is the ...",
+      "\u2705 BEAT Rank #1 (26f838): CANDIDATE_f7c91ccacd4ef279ac730bc8d114b77a is the ...",
       "\ud83c\udfc5 Placed at Rank #1"
     ],
-    "evidence":"SOURCE [https:\/\/tamalsen.dev\/]: SCRAPED CONTENT: Skip to content \/\/ home \/\/ expertise \/\/ work \/\/ experience \/\/ contact TAMAL SEN SOFTWARE ENGINEER, FRONT END & APP DEVELOPER. AS FEATURED IN Previous Next Deployed scalable travel, event and telemedicine web and hybrid mobile apps using React SPA and PWA. Collaborated in 140+ projects with 50+ clients all around the world. I am also interested in data analytics and visualization. Featured Project Tryotel App View Project Senior Lead Software Engineer @ Saimon Global Ltd 2019 - 2024 Dhaka, Bangladesh saimonglobal.com Led a frontend team to design and develop robust B2C and B2B Travel Tech solutions, utilizing React\/Next.js for web applications and Flutter SDK for cross-platform mobile apps, with a focus on responsive design, scalability, and enhanced user experience. JS TS Dart React NextJS Flutter Web Developer @ influenceTHIS Canada 2018-2019 Remote (Toronto, Canada) influencethis.ca Developed the UI and UX eco-system for a conference event platform using modular component structures with JS, SCSS, Gulp on Node. JS GULP SCSS Nodejs Top Rated Web Developer @ Upwork Inc. 2017 - Present Remote upwork.com Top-Rated developer on Upwork specializing in Front-end (React, WordPress) technologies with a 100% job success rate and client satisfaction rating (based on 150+ Jobs, 2500+ hours). Javascript PHP HTML CSS Figma Since 2018 Tamal has been responsible for the development of our website which has been instrumental to the growth of our company. Even while working remotely he\u2019s bee...",
-    "id":"76544c5eaa319543e6f5d7d8984ff606",
-    "safe_text":"NAME: CANDIDATE_76544c5eaa319543e6f5d7d8984ff606\nEMAIL: [EMAIL_REDACTED]\nPHONE: +36-836-1844\nROLE: Software Engineer\nLINK: https:\/\/tamalsen.dev\/\nEXP: 4 Yrs",
-    "contact_info":{
-      "emails":[
-        "lars.jensen45@dev-hub.io"
-      ],
-      "links":[
-        "https:\/\/tamalsen.dev\/"
-      ],
-      "phones":[
-
-      ]
-    }
+    "evidence":"No links provided.",
+    "id":"f7c91ccacd4ef279ac730bc8d114b77a",
+    "safe_text":"\n        NAME: CANDIDATE_f7c91ccacd4ef279ac730bc8d114b77a\n        ROLE: Elite Hacker\n        \n        Highly motivated Security Researcher with 10 years of experience.\n\nPROFESSIONAL SUMMARY:\nSpeaker at KubeCon 2024.\nReduced latency by 67% using advanced Kernel techniques.\nAuthored multiple libraries in C++ downloaded over 380222 times.\n        \n        SKILLS: Rust, C++, Go, Linux, Kernel, Embedded, Assembly\n        NOTE: I do not provide contact info. Find me if you can.\n        "
   },
   {
     "rank":2,
     "battle_log":[
-      "\u2705 BEAT Rank #4 (7a42db): This candidate is the superior investment because ...",
-      "\u2705 BEAT Rank #2 (279f83): This candidate is the superior investment because ...",
-      "\u2705 BEAT Rank #1 (a5818f): This candidate is the superior investment because ...",
+      "\u2705 BEAT Rank #2 (6ad1f1): CANDIDATE_26f8383128742acdc3f9a18eb1a4f573 is the ...",
+      "\u2705 BEAT Rank #1 (097991): CANDIDATE_26f8383128742acdc3f9a18eb1a4f573 is the ...",
       "\ud83c\udfc5 Placed at Rank #1",
-      "\u274c LOST to Challenger (76544c): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (432099): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (cca974): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (f49a1c): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (e9a186): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (405a71): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (6beb4a): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (f4cbf2): This candidate is the superior investment because ..."
+      "\ud83d\udee1\ufe0f DEFENDED against (3ff4d7): CANDIDATE_26f8383128742acdc3f9a18eb1a4f573 is the ...",
+      "\u274c LOST to Challenger (f7c91c): CANDIDATE_f7c91ccacd4ef279ac730bc8d114b77a is the ..."
     ],
-    "evidence":"SOURCE [https:\/\/tamalsen.dev\/]: SCRAPED CONTENT: Skip to content \/\/ home \/\/ expertise \/\/ work \/\/ experience \/\/ contact TAMAL SEN SOFTWARE ENGINEER, FRONT END & APP DEVELOPER. AS FEATURED IN Previous Next Deployed scalable travel, event and telemedicine web and hybrid mobile apps using React SPA and PWA. Collaborated in 140+ projects with 50+ clients all around the world. I am also interested in data analytics and visualization. Featured Project Tryotel App View Project Senior Lead Software Engineer @ Saimon Global Ltd 2019 - 2024 Dhaka, Bangladesh saimonglobal.com Led a frontend team to design and develop robust B2C and B2B Travel Tech solutions, utilizing React\/Next.js for web applications and Flutter SDK for cross-platform mobile apps, with a focus on responsive design, scalability, and enhanced user experience. JS TS Dart React NextJS Flutter Web Developer @ influenceTHIS Canada 2018-2019 Remote (Toronto, Canada) influencethis.ca Developed the UI and UX eco-system for a conference event platform using modular component structures with JS, SCSS, Gulp on Node. JS GULP SCSS Nodejs Top Rated Web Developer @ Upwork Inc. 2017 - Present Remote upwork.com Top-Rated developer on Upwork specializing in Front-end (React, WordPress) technologies with a 100% job success rate and client satisfaction rating (based on 150+ Jobs, 2500+ hours). Javascript PHP HTML CSS Figma Since 2018 Tamal has been responsible for the development of our website which has been instrumental to the growth of our company. Even while working remotely he\u2019s bee...",
-    "id":"1d27ac7bb14a50138a49e5a963308345",
-    "safe_text":"NAME: CANDIDATE_1d27ac7bb14a50138a49e5a963308345\nEMAIL: [EMAIL_REDACTED]\nPHONE: +2-784-4848\nROLE: Software Engineer\nLINK: https:\/\/tamalsen.dev\/\nEXP: 15 Yrs",
-    "contact_info":{
-      "emails":[
-        "tim.berners-lee-ish18@protonmail.com"
-      ],
-      "links":[
-        "https:\/\/tamalsen.dev\/"
-      ],
-      "phones":[
-        "+27844848"
-      ]
-    }
+    "evidence":"SOURCE [https:\/\/github.com\/torvalds]: SCRAPED CONTENT: Skip to content Navigation Menu Platform Solutions Resources Open Source Enterprise Pricing Sign in Sign up torvalds Follow Overview Repositories 11 Projects Packages Stars 2 torvalds Follow Linus Torvalds torvalds Follow 283k followers \u00b7 0 following Linux Foundation Portland, OR Achievements x4 x2 x4 Block or Report Pinned Loading linux Public Linux kernel source tree C 217k 60.4k GuitarPedal Public archive Linus learns analog circuits C 1.7k 62 uemacs Public Random version of microemacs with my private modificatons C 1.9k 295 AudioNoise Public Random digital audio effects C 4.2k 195 HunspellColorize Public Wrapper around 'less' to colorize spelling mistakes using Hunspell C 283 12 3,088 contributions in the last year Skip to contributions year list Contribution Graph Day of Week February Feb March Mar April Apr May May June Jun July Jul August Aug September Sep October Oct November Nov December Dec January Jan Sunday Sun Monday Mon Tuesday Tue Wednesday Wed Thursday Thu Friday Fri Saturday Sat Learn how we count contributions Less No contributions. Low contributions. Medium-low contributions. Medium-high contributions. High contributions. More Activity overview Contributed to torvalds\/linux, torvalds\/1590A, torvalds\/GuitarPedal and 3 other repositories Loading Code review Issues Pull requests 100% Commits Contribution activity February 2026 Created 32 commits in 1 repository torvalds\/linux 32 commits Loading Show more activity 2026 2025 2024 2023 2022 2021 2020 2019 2018 20... | SOURCE [https:\/\/www.jenniferdewalt.com\/,]: SCRAPED CONTENT: The page you were looking for doesn't exist. You may have mistyped the address or the page may have moved....",
+    "id":"26f8383128742acdc3f9a18eb1a4f573",
+    "safe_text":"\n        NAME: CANDIDATE_26f8383128742acdc3f9a18eb1a4f573\n        CONTACT: {EMAIL.} | {PHONE.}\n        ROLE: Senior Systems Architect\n        LINKS: {LINK.} {LINK.}\n        \n        Highly motivated Systems Architect with 12 years of experience.\n\nPROFESSIONAL SUMMARY:\nReduced latency by 46% using advanced C++ techniques.\nImplemented a Go pipeline that saved the company 171 hours annually.\nAuthored multiple libraries in C++ downloaded over 602809 times.\n        \n        TECHNICAL ARSENAL: Rust, C++, Go, Linux, Kernel, Embedded, Assembly, Python, PyTorch, TensorFlow, CUDA, LLM, RAG, LangChain\n        \n        EXPERIENCE:\n        - Principal Engineer at TechCorp (2018-Present): Led the migration from monolith to microservices using Rust.\n        - Senior Dev at StartupX (2014-2018): Scaled user base to 1M+ using C++ and Go.\n        "
   },
   {
     "rank":3,
     "battle_log":[
       "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
-      "\u2705 BEAT Rank #5 (432099): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #2 (1d27ac): This candidate is the superior investment because ...",
-      "\u2705 BEAT Rank #3 (cca974): This candidate is the superior investment because ...",
-      "\ud83c\udfc5 Placed at Rank #3",
-      "\ud83d\udee1\ufe0f DEFENDED against (405a71): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (6beb4a): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (f4cbf2): This candidate is the superior investment because ..."
+      "\u2705 BEAT Rank #2 (097991): CANDIDATE_3ff4d7633d4b620fd1e9d2e319cf15ad is the ...",
+      "\u274c LOST to Rank #1 (26f838): CANDIDATE_26f8383128742acdc3f9a18eb1a4f573 is the ...",
+      "\ud83c\udfc5 Placed at Rank #2",
+      "\ud83d\udee1\ufe0f DEFENDED against (2d0541): CANDIDATE_3ff4d7633d4b620fd1e9d2e319cf15ad is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (7a4ec3): CANDIDATE_3ff4d7633d4b620fd1e9d2e319cf15ad is the ...",
+      "\u274c LOST to Challenger (f7c91c): CANDIDATE_f7c91ccacd4ef279ac730bc8d114b77a is the ..."
     ],
-    "evidence":"SOURCE [https:\/\/brittanychiang.com\/]: SCRAPED CONTENT: SKIP TO CONTENT Brittany Chiang Frontend Engineer I build accessible, pixel-perfect digital experiences for the web. ABOUT EXPERIENCE PROJECTS GitHub LinkedIn CodePen Instagram Goodreads ABOUT I\u2019m a frontend engineer with a specialty in web accessibility, focused on building pixel-perfect, intuitive user interfaces. I enjoy working at the intersection of design and engineering, where great user experience meets robust, clean, and scalable code. Currently, I'm a senior frontend engineer at Klaviyo, where I work on the component library team to help maintain and evolve our design system. In this role, I lead accessibility efforts across components, tooling, and patterns, partnering closely with designers and engineers to ensure accessibility is part of our core architecture. Previously, I\u2019ve worked across a wide range of environments, from product studios to startups and large tech companies, including Apple, Starry Internet, and Upstatement. Alongside my professional work, I also created an online video course a few years ago which walks through building a real-world, API-driven application from scratch. These experiences have shaped how I think about building products that are both well-crafted and widely usable. Outside of work, you can usually find me climbing, playing tennis, hanging out with my wife and two cats, or running around Hyrule searching for Korok seeds K o r o k s e e d s . EXPERIENCE 2024 \u2014 PRESENT Senior Frontend Engineer, Accessibility \u00b7 Klaviyo Build and ma...",
-    "id":"e9a186d4f508a83f1a950ccf33e6404f",
-    "safe_text":"NAME: CANDIDATE_e9a186d4f508a83f1a950ccf33e6404f\nEMAIL: [EMAIL_REDACTED]\nPHONE: +23-841-7915\nROLE: Software Engineer\nLINK: https:\/\/brittanychiang.com\/\nEXP: 14 Yrs",
-    "contact_info":{
-      "emails":[
-        "john.resig-ish47@gmail.com"
-      ],
-      "links":[
-        "https:\/\/brittanychiang.com\/"
-      ],
-      "phones":[
-
-      ]
-    }
+    "evidence":"No links provided.",
+    "id":"3ff4d7633d4b620fd1e9d2e319cf15ad",
+    "safe_text":"\n        NAME: CANDIDATE_3ff4d7633d4b620fd1e9d2e319cf15ad\n        ROLE: Elite Hacker\n        \n        Visionary leader transforming the Security Researcher landscape.\n\nPROFESSIONAL SUMMARY:\nManaged a budget of $497k for cloud migration projects.\nImplemented a Go pipeline that saved the company 255 hours annually.\nAuthored multiple libraries in C++ downloaded over 563499 times.\n        \n        SKILLS: Rust, C++, Go, Linux, Kernel, Embedded, Assembly\n        NOTE: I do not provide contact info. Find me if you can.\n        "
   },
   {
     "rank":4,
     "battle_log":[
-      "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
-      "\u2705 BEAT Rank #5 (279f83): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #2 (1d27ac): This candidate is the superior investment because ...",
-      "\u2705 BEAT Rank #3 (432099): This candidate is the superior investment because ...",
-      "\ud83c\udfc5 Placed at Rank #3",
-      "\ud83d\udee1\ufe0f DEFENDED against (f49a1c): This candidate is the superior investment because ...",
-      "\u274c LOST to Challenger (e9a186): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (405a71): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (6beb4a): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (f4cbf2): This candidate is the superior investment because ..."
+      "\u2705 BEAT Rank #1 (61bea6): CANDIDATE_09799158fb40ce05e4ce582135701664 is the ...",
+      "\ud83c\udfc5 Placed at Rank #1",
+      "\ud83d\udee1\ufe0f DEFENDED against (6ad1f1): CANDIDATE_09799158fb40ce05e4ce582135701664 is the ...",
+      "\u274c LOST to Challenger (26f838): CANDIDATE_26f8383128742acdc3f9a18eb1a4f573 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (94faa6): CANDIDATE_09799158fb40ce05e4ce582135701664 is the ...",
+      "\u274c LOST to Challenger (3ff4d7): CANDIDATE_3ff4d7633d4b620fd1e9d2e319cf15ad is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (2d0541): CANDIDATE_09799158fb40ce05e4ce582135701664 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (7a4ec3): CANDIDATE_09799158fb40ce05e4ce582135701664 is the ..."
     ],
-    "evidence":"SOURCE [https:\/\/brittanychiang.com\/]: SCRAPED CONTENT: SKIP TO CONTENT Brittany Chiang Frontend Engineer I build accessible, pixel-perfect digital experiences for the web. ABOUT EXPERIENCE PROJECTS GitHub LinkedIn CodePen Instagram Goodreads ABOUT I\u2019m a frontend engineer with a specialty in web accessibility, focused on building pixel-perfect, intuitive user interfaces. I enjoy working at the intersection of design and engineering, where great user experience meets robust, clean, and scalable code. Currently, I'm a senior frontend engineer at Klaviyo, where I work on the component library team to help maintain and evolve our design system. In this role, I lead accessibility efforts across components, tooling, and patterns, partnering closely with designers and engineers to ensure accessibility is part of our core architecture. Previously, I\u2019ve worked across a wide range of environments, from product studios to startups and large tech companies, including Apple, Starry Internet, and Upstatement. Alongside my professional work, I also created an online video course a few years ago which walks through building a real-world, API-driven application from scratch. These experiences have shaped how I think about building products that are both well-crafted and widely usable. Outside of work, you can usually find me climbing, playing tennis, hanging out with my wife and two cats, or running around Hyrule searching for Korok seeds K o r o k s e e d s . EXPERIENCE 2024 \u2014 PRESENT Senior Frontend Engineer, Accessibility \u00b7 Klaviyo Build and ma...",
-    "id":"cca9744f911fe17db8426ca26083e460",
-    "safe_text":"NAME: CANDIDATE_cca9744f911fe17db8426ca26083e460\nEMAIL: [EMAIL_REDACTED]\nPHONE: +79-783-7811\nROLE: Software Engineer\nLINK: https:\/\/brittanychiang.com\/\nEXP: 15 Yrs",
-    "contact_info":{
-      "emails":[
-        "dan.abramov-ish90@protonmail.com"
-      ],
-      "links":[
-        "https:\/\/brittanychiang.com\/"
-      ],
-      "phones":[
-
-      ]
-    }
+    "evidence":"SOURCE [https:\/\/leerob.io\/,]: SCRAPED CONTENT: 404 This page could not be found.... | SOURCE [https:\/\/bruno-simon.com\/]: Scrape Failed (Page.goto: Timeout 10000ms exc)",
+    "id":"09799158fb40ce05e4ce582135701664",
+    "safe_text":"\n        NAME: CANDIDATE_09799158fb40ce05e4ce582135701664\n        CONTACT: {EMAIL.} | {PHONE.}\n        ROLE: Senior Systems Architect\n        LINKS: {LINK.} {LINK.}\n        \n        Passionate Systems Architect specializing in scalable architecture.\n\nPROFESSIONAL SUMMARY:\nSuccessfully led a team of 10 engineers to deploy critical infrastructure.\nSpeaker at ReactConf 2024.\nReduced latency by 33% using advanced Assembly techniques.\n        \n        TECHNICAL ARSENAL: Rust, C++, Go, Linux, Kernel, Embedded, Assembly, Python, PyTorch, TensorFlow, CUDA, LLM, RAG, LangChain\n        \n        EXPERIENCE:\n        - Principal Engineer at TechCorp (2018-Present): Led the migration from monolith to microservices using Rust.\n        - Senior Dev at StartupX (2014-2018): Scaled user base to 1M+ using C++ and Go.\n        "
   },
   {
     "rank":5,
     "battle_log":[
       "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
-      "\u2705 BEAT Rank #5 (6beb4a): This candidate is the superior investment because,...",
-      "\u274c LOST to Rank #2 (1d27ac): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #3 (e9a186): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #4 (cca974): This candidate is the superior investment because ...",
-      "\ud83c\udfc5 Placed at Rank #5"
-    ],
-    "evidence":"SOURCE [https:\/\/bruno-simon.com\/]: SCRAPED CONTENT: ...",
-    "id":"f4cbf21a98ff2d25ea0e55d84c950e85",
-    "safe_text":"NAME: CANDIDATE_f4cbf21a98ff2d25ea0e55d84c950e85\nEMAIL: [EMAIL_REDACTED]\nPHONE: +44-726-8975\nROLE: Software Engineer\nLINK: https:\/\/bruno-simon.com\/\nEXP: 13 Yrs",
-    "contact_info":{
-      "emails":[
-        "alan.turing-ish69@dev-hub.io"
-      ],
-      "links":[
-        "https:\/\/bruno-simon.com\/"
-      ],
-      "phones":[
-
-      ]
-    }
-  },
-  {
-    "rank":6,
-    "battle_log":[
-      "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
-      "\u2705 BEAT Rank #5 (405a71): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #2 (1d27ac): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #3 (e9a186): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #4 (cca974): This candidate is the superior investment because ...",
-      "\ud83c\udfc5 Placed at Rank #5",
-      "\ud83d\udee1\ufe0f DEFENDED against (91ab8a): This candidate is the superior investment because ...",
-      "\u274c LOST to Challenger (f4cbf2): This candidate is the superior investment because,..."
-    ],
-    "evidence":"SOURCE [https:\/\/bruno-simon.com\/]: SCRAPED CONTENT: ...",
-    "id":"6beb4ae4cbc58feed3544edfe53ae4c4",
-    "safe_text":"NAME: CANDIDATE_6beb4ae4cbc58feed3544edfe53ae4c4\nEMAIL: [EMAIL_REDACTED]\nPHONE: +28-701-7646\nROLE: Software Engineer\nLINK: https:\/\/bruno-simon.com\/\nEXP: 10 Yrs",
-    "contact_info":{
-      "emails":[
-        "fatima.zahra72@protonmail.com"
-      ],
-      "links":[
-        "https:\/\/bruno-simon.com\/"
-      ],
-      "phones":[
-
-      ]
-    }
-  },
-  {
-    "rank":7,
-    "battle_log":[
-      "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
-      "\u2705 BEAT Rank #5 (f49a1c): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #2 (1d27ac): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #3 (e9a186): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #4 (cca974): This candidate is the superior investment because ...",
-      "\ud83c\udfc5 Placed at Rank #5",
-      "\u274c LOST to Challenger (6beb4a): This candidate is the superior investment because ..."
-    ],
-    "evidence":"SOURCE [https:\/\/matthewfarley.ca\/]: Scrape Failed (Page.goto: net::ERR_NAME_NOT_R)",
-    "id":"405a711aa9ef43b37ba71c4ee8c62d53",
-    "safe_text":"NAME: CANDIDATE_405a711aa9ef43b37ba71c4ee8c62d53\nEMAIL: [EMAIL_REDACTED]\nPHONE: +28-727-4804\nROLE: Software Engineer\nLINK: https:\/\/matthewfarley.ca\/\nEXP: 11 Yrs",
-    "contact_info":{
-      "emails":[
-        "linus.torvalds-ish16@outlook.com"
-      ],
-      "links":[
-        "https:\/\/matthewfarley.ca\/"
-      ],
-      "phones":[
-
-      ]
-    }
-  },
-  {
-    "rank":8,
-    "battle_log":[
-      "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
-      "\u2705 BEAT Rank #5 (a5818f): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #2 (1d27ac): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #3 (cca974): This candidate is the superior investment because ...",
-      "\u2705 BEAT Rank #4 (432099): This candidate is the superior investment because ...",
+      "\u274c LOST to Rank #2 (3ff4d7): CANDIDATE_3ff4d7633d4b620fd1e9d2e319cf15ad is the ...",
+      "\u274c LOST to Rank #3 (097991): CANDIDATE_09799158fb40ce05e4ce582135701664 is the ...",
+      "\u2705 BEAT Rank #4 (6ad1f1): CANDIDATE_2d054187ee50f8bc3a5a5ce6e7b83077 is the ...",
       "\ud83c\udfc5 Placed at Rank #4",
-      "\u274c LOST to Challenger (405a71): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (91ab8a): This candidate is the superior investment because,..."
+      "\ud83d\udee1\ufe0f DEFENDED against (7a4ec3): CANDIDATE_2d054187ee50f8bc3a5a5ce6e7b83077 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED spot against a31a4b",
+      "\ud83d\udee1\ufe0f DEFENDED spot against dff994",
+      "\ud83d\udee1\ufe0f DEFENDED spot against a2b307",
+      "\ud83d\udee1\ufe0f DEFENDED spot against 3f8ec8",
+      "\ud83d\udee1\ufe0f DEFENDED spot against f4cad1",
+      "\ud83d\udee1\ufe0f DEFENDED spot against 93d419",
+      "\ud83d\udee1\ufe0f DEFENDED spot against 61f53f",
+      "\ud83d\udee1\ufe0f DEFENDED spot against ad1aa2",
+      "\ud83d\udee1\ufe0f DEFENDED spot against 03561a",
+      "\ud83d\udee1\ufe0f DEFENDED spot against 262045"
     ],
-    "evidence":"SOURCE [https:\/\/matthewfarley.ca\/]: Scrape Failed (Page.goto: net::ERR_NAME_NOT_R)",
-    "id":"f49a1c9e7c3f8f00d4cbfa3363a6ada1",
-    "safe_text":"NAME: CANDIDATE_f49a1c9e7c3f8f00d4cbfa3363a6ada1\nEMAIL: [EMAIL_REDACTED]\nPHONE: +59-837-9615\nROLE: Software Engineer\nLINK: https:\/\/matthewfarley.ca\/\nEXP: 3 Yrs",
-    "contact_info":{
-      "emails":[
-        "guido.van.rossum-ish59@dev-hub.io"
-      ],
-      "links":[
-        "https:\/\/matthewfarley.ca\/"
-      ],
-      "phones":[
-
-      ]
-    }
-  },
-  {
-    "rank":9,
-    "battle_log":[
-      "\u2705 BEAT Rank #5 (e83172): This candidate is the superior investment because ...",
-      "\u274c LOST to Rank #2 (1d27ac): This candidate is the superior investment because ...",
-      "\u2705 BEAT Rank #3 (a5818f): This candidate is the superior investment because ...",
-      "\ud83c\udfc5 Placed at Rank #3",
-      "\u274c LOST to Challenger (cca974): This candidate is the superior investment because ...",
-      "\u274c LOST to Challenger (f49a1c): This candidate is the superior investment because ...",
-      "\u274c LOST to Challenger (e9a186): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (91ab8a): This candidate is the superior investment because ..."
-    ],
-    "evidence":"SOURCE [https:\/\/leerob.io\/]: SCRAPED CONTENT: Lee Robinson I\u2019m a developer and writer. I work at Cursor teaching about AI. Previously, I worked at Vercel. I\u2019ve been coding for 15 years and teaching for the second half. My life\u2019s work is to make technology easy to understand and interesting to learn about. I\u2019m a husband, father, and a massive music fan. I last listened to Body by Don Toliver. Some of my favorite writing includes: Things I Believe Coding Agents & Complexity Budgets Building Low-Level Software with Only Coding Agents How Does Image Compression Work? Developer Marketing Understanding AI You can read my writing or code, or follow me online. I also make videos, advise companies, and do angel investing. Reach out if interested....",
-    "id":"4320997bdcb00d4951208b83afb12c99",
-    "safe_text":"NAME: CANDIDATE_4320997bdcb00d4951208b83afb12c99\nEMAIL: [EMAIL_REDACTED]\nPHONE: +51-976-7733\nROLE: Software Engineer\nLINK: https:\/\/leerob.io\/\nEXP: 15 Yrs",
-    "contact_info":{
-      "emails":[
-        "james.gosling-ish50@protonmail.com"
-      ],
-      "links":[
-        "https:\/\/leerob.io\/"
-      ],
-      "phones":[
-
-      ]
-    }
-  },
-  {
-    "rank":10,
-    "battle_log":[
-      "\u2705 BEAT Rank #3 (7a42db): This candidate is the superior investment because ...",
-      "\u2705 BEAT Rank #1 (279f83): This candidate is the superior investment because ...",
-      "\ud83c\udfc5 Placed at Rank #1",
-      "\u274c LOST to Challenger (1d27ac): This candidate is the superior investment because ...",
-      "\u274c LOST to Challenger (76544c): This candidate is the superior investment because ...",
-      "\u274c LOST to Challenger (432099): This candidate is the superior investment because ...",
-      "\u274c LOST to Challenger (f49a1c): This candidate is the superior investment because ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (91ab8a): This candidate is the superior investment because,..."
-    ],
-    "evidence":"SOURCE [https:\/\/bruno-simon.com\/]: Scrape Failed (Page.goto: Timeout 10000ms exc)",
-    "id":"a5818fc04b63bb98d158e33e6d437ebc",
-    "safe_text":"NAME: CANDIDATE_a5818fc04b63bb98d158e33e6d437ebc\nEMAIL: [EMAIL_REDACTED]\nPHONE: +64-925-8752\nROLE: Software Engineer\nLINK: https:\/\/bruno-simon.com\/\nEXP: 13 Yrs",
-    "contact_info":{
-      "emails":[
-        "mark.zuckerberg-ish94@gmail.com"
-      ],
-      "links":[
-        "https:\/\/bruno-simon.com\/"
-      ],
-      "phones":[
-
-      ]
-    }
+    "evidence":"No links provided.",
+    "id":"2d054187ee50f8bc3a5a5ce6e7b83077",
+    "safe_text":"\n        NAME: CANDIDATE_2d054187ee50f8bc3a5a5ce6e7b83077\n        ROLE: Elite Hacker\n        \n        Results-driven professional with a track record in Rust and C++.\n\nPROFESSIONAL SUMMARY:\nSuccessfully led a team of 13 engineers to deploy critical infrastructure.\nManaged a budget of $51k for cloud migration projects.\nReduced latency by 33% using advanced Rust techniques.\n        \n        SKILLS: Rust, C++, Go, Linux, Kernel, Embedded, Assembly\n        NOTE: I do not provide contact info. Find me if you can.\n        "
   }
 ]

@@ -13,7 +13,7 @@ class ResumeExtractor:
         # We focus on these 3 formats.
         self.supported = {'.pdf', '.docx', '.txt'}
 
-    def _get_hash(self, file_path) -> str:
+    def get_hash(self, file_path) -> str:
         """
         Creates a unique ID based on file CONTENT, not file NAME.
         This solves the 'Split Brain' problem.
@@ -112,12 +112,12 @@ class ResumeExtractor:
         # Get all supported files
         files = [f for f in folder.iterdir() if f.suffix.lower() in self.supported]
         print(f"🏛️  The Gate: Processing {len(files)} resumes from '{source_folder}'...")
-
+        quarantined = 0
         seen_hashes = set()
         for f in track(files, description="[green]Extracting Resumes..."):
             # 1. Identity: Create the Immutable Hash
             try:
-                file_hash = self._get_hash(f)
+                file_hash = self.get_hash(f)
                 if file_hash in seen_hashes:
                     self._quarantine_file(f, "Duplicate Content (MD5 Match)")
                     continue
@@ -139,16 +139,21 @@ class ResumeExtractor:
                 text, method = self._extract_txt(f)
 
             # 3. Quality Gate & Quarantine Logic
-            # If text is None, the extractor methods (above) already flagged it as an error
-            # If text is < 50 chars, we treat it as an "Image PDF" (Zombie)
             if not text or len(text.strip()) < 50:
-                self._quarantine_file(f, "Empty or Image-based PDF (Text < 50 chars)")
-                continue
-            
+                try:
+                    self._quarantine_file(f, "Empty or Image-based PDF (Text < 50 chars)")
+                except Exception as e:
+                    # to prevent it from entering the database.
+                    print(f" ❌ Unable to move file {f.name} to quarantine: {e}")
+                
+                    quarantined += 1
+                    continue # CRITICAL: This must happen even if the 'move' failed.
+
             # If extraction failed specifically (method returned error flag)
             if "error" in method:
-                 self._quarantine_file(f, f"Extraction Failed ({method})")
-                 continue
+                self._quarantine_file(f, f"Extraction Failed ({method})")
+                quarantined += 1
+                continue
 
             # 4. Store the Valid Data
             data.append({
@@ -156,21 +161,21 @@ class ResumeExtractor:
                 "file_name": f.name,
                 "file_type": ext,
                 "extraction_method": method,
-                "raw_text": text,  # Storing RAW text (Sanitization happens in Arbiter)
-                "content_hash": file_hash
+                "raw_text": text  # Storing RAW text
             })
 
         # 5. Save
         if data:
             df = pd.DataFrame(data)
-            # Remove duplicates based on content hash (Double submission protection)
-            df = df.drop_duplicates(subset=['content_hash'])
+            # Remove duplicates based on hash (Double submission protection)
+            df = df.drop_duplicates(subset=['id'])
             
             df.to_parquet(output_file, index=False)
             
             print(f"✅ Extraction Complete.")
             print(f"   - Processed: {len(files)}")
-            print(f"   - Quarantined: {len(files) - len(df)}")
+            print(f"   - Duplicates: {len(files) - len(df) + quarantined}")
+            print(f"   - Quarantined: {quarantined}")
             print(f"   - Survivors: {len(df)}")
             print(f"   - Saved to: {output_file}")
             return df

@@ -5,6 +5,7 @@ fastparquet
 pyarrow
 
 # --- Document Processing ---
+spacy
 pymupdf
 pymupdf4llm
 python-docx

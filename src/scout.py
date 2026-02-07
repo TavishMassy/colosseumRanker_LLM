@@ -1,122 +1,113 @@
 import re
-import numpy as np
+import spacy
 import pandas as pd
-import phonenumbers
 from pathlib import Path
+from collections import Counter
 from rich.progress import track
 from urlextract import URLExtract
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
+# Removed: numpy (pandas/sklearn handle the math), os (not needed with pathlib)
+
 class SmartScout:
     def __init__(self, model_name='all-MiniLM-L6-v2') -> None:
-        print("🔭 Scout: Loading Neural Network (this happens once)...")
-        # Downloads the model automatically on first run
+        print("🔭 Scout: Loading Neural Network...")
         self.model = SentenceTransformer(model_name)
         self.url_extractor = URLExtract()
+        # Optimized spaCy loading - disabling heavy components immediately
+        try:
+            self.nlp = spacy.load("en_core_web_sm", disable=["ner", "parser", "lemmatizer"])
+        except OSError:
+            print("Installing spaCy model...")
+            import subprocess
+            import sys
+            subprocess.check_call([sys.executable, "-m", "spacy", "download", "en_core_web_sm"])
+            self.nlp = spacy.load("en_core_web_sm", disable=["ner", "parser", "lemmatizer"])
 
     def _extract_and_mask(self, text):
-        """
-        Extracts PII (Phone/Email) + Links.
-        Returns: 
-          - masked_text (for AI)
-          - metadata (real email/phone/links for You)
-        """
-        if not text: return text, {}
+        if not text: return text, {"emails": [], "links": []}
 
-        metadata = {
-            "emails": [],
-            "phones": [],
-            "links": []
-        }
-
-        # 1. Extract & Mask Emails (Regex is still best for this)
+        metadata = {"emails": [], "links": []}
+        
+        # 1. Emails
         email_pattern = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
-        metadata['emails'] = list(set(re.findall(email_pattern, text)))
-        
-        # Mask them in the text
-        masked_text = re.sub(email_pattern, "[EMAIL_REDACTED]", text)
+        metadata['emails'] = list(set(re.findall(email_pattern, text)))   
+        masked_text = re.sub(email_pattern, "{EMAIL.}", text)
 
-        # 2. Extract & Mask Phones (Using Google's lib)
-        # Look for matches and replace them securely
-        matches = phonenumbers.PhoneNumberMatcher(masked_text, "US") # Default region
-        phones = []
-        for match in matches:
-            phones.append(phonenumbers.format_number(match.number, phonenumbers.PhoneNumberFormat.E164))
-            # Replace using the match's span
-            start, end = match.start, match.end
-            # A simple replace might hit wrong things, so we handle masking carefully
-            # For simplicity in this script, we'll do a second pass or just accept raw regex for masking
-            # But since we have the extraction, let's just use a broad regex for masking visual clutter
-        
-        metadata['phones'] = list(set(phones))
-        
-        # Broad regex just to hide numbers from the LLM (Bias prevention)
-        phone_visual_pattern = r'(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}'
-        masked_text = re.sub(phone_visual_pattern, "[PHONE_REDACTED]", masked_text)
-
-        # 3. Extract Links (Using urlextract)
-        # DO NOT mask links. The AI needs them to know if a portfolio exists.
-        # Just extract them so we can Scrape them later.
-        metadata['links'] = list(set(self.url_extractor.find_urls(text)))
+        # 2. Links
+        links = list(set(self.url_extractor.find_urls(masked_text)))
+        metadata['links'] = links
+        for link in sorted(links, key=len, reverse=True):
+            masked_text = masked_text.replace(link, "{LINK.}")
 
         return masked_text, metadata
 
-    def filter_candidates(self, parquet_file, battle_sheet_text, output_file, top_k=50) -> list:
+    def filter_candidates(self, parquet_file, battle_sheet_text, output_file,
+                          top_k=50, anchors=None, extract_all=False) -> pd.DataFrame:
         """
-        Input: Path to candidates.parquet, Text of the 'Battle Sheet' (Criteria).
-        Output: List of the Top 50 Candidate IDs.
+        Refined Filter: Handles vector similarity + Density Audit + Anchor check.
         """
-        # 1. Load Data
         if not Path(parquet_file).exists():
-            print(f"❌ Error: {parquet_file} not found. Run Phase 1 first.")
+            print(f"❌ Error: {parquet_file} not found.")
             return None
             
         df = pd.read_parquet(parquet_file)
         if df.empty:
             print("⚠️ Warning: No candidates to filter.")
-            return []
-            
-        print(f"⚔️  Scout: Analyzing {len(df)} candidates against the Battle Sheet...")
+            return df
 
-        # 2. Embed the Battle Sheet (The "Target")
-        # Assume battle_sheet_text is a string like "Must have Python, AWS, and 3 years exp..."
+        print(f"⚔️ Scout: Analyzing {len(df)} candidates...")
+
+        # 2. Vectorization
         query_vector = self.model.encode([battle_sheet_text])
-
-        # 3. Embed the Candidates (The "Pool")
-        # fast=True creates embeddings in parallel if possible
         candidate_vectors = self.model.encode(df['raw_text'].tolist(), show_progress_bar=True)
-
-        # 4. Math Time (Cosine Similarity)
-        # Result is a matrix of scores (0.0 to 1.0)
         scores = cosine_similarity(query_vector, candidate_vectors)[0]
 
-        # 5. Rank & Cut
-        # Add scores to the dataframe temporarily
-        df['vector_score'] = scores
-        
-        # Sort by Score (Descending) and take Top K
-        top_candidates = df.sort_values(by='vector_score', ascending=False).head(top_k)
-        
-        print(f"🕵️  Scout: Refining Top {len(top_candidates)} (Extracting PII & Links)...")
+        # 3. Apply Scout Rules
+        final_scores = []
+        for i, row in df.iterrows():
+            text = row['raw_text']
+            base_score = scores[i]
+            
+            # RULE 1: Anchor Keyword Check (Fixed: anchors was ghost code)
+            if anchors and not any(a.lower() in text.lower() for a in anchors):
+                base_score = 0.0
+            
+            # RULE 2: Density Audit (Skill-Soup Trap)
+            if base_score > 0:
+                doc = self.nlp(text[:1500]) # Audit first 1500 chars only
+                pos_counts = Counter([token.pos_ for token in doc])
+                total_words = sum(pos_counts.values())
+                noun_count = pos_counts.get('NOUN', 0) + pos_counts.get('PROPN', 0)
+                
+                if total_words > 0 and (noun_count / total_words) > 0.40:
+                    base_score *= 0.5 
+            
+            final_scores.append(base_score)
 
-        # 6. The Refinement Loop (Extract & Mask)
-        # Apply the extraction ONLY to the survivors
-        
-        safe_texts = []
-        meta_list = []
+        df['vector_score'] = final_scores
 
-        for text in track(top_candidates['raw_text'], description="[cyan]Masking PII..."):
-            safe, meta = self._extract_and_mask(text)
+        # 4. Processing Pool (Fixed: extract_all was ghost code)
+        target_df = df.sort_values(by='vector_score', ascending=False)
+        if not extract_all:
+            target_df = target_df.head(top_k).copy()
+        else:
+            target_df = target_df.copy()
+
+        # 5. Metadata Append Loop
+        emails, links, safe_texts = [], [], []
+
+        for idx, row in track(target_df.iterrows(), total=len(target_df), description="Scouting..."):
+            safe, meta = self._extract_and_mask(row['raw_text'])
             safe_texts.append(safe)
-            meta_list.append(meta)
+            emails.append(meta['emails'])
+            links.append(meta['links'])
 
-        # Save the Clean Data
-        top_candidates['safe_text'] = safe_texts
-        top_candidates['contact_info'] = meta_list
+        target_df['safe_text'] = safe_texts
+        target_df['emails'] = emails
+        target_df['links'] = links
         
-        # Save to a new file for Phase 3
-        top_candidates.to_parquet(output_file, index=False)
-
-        print(f"✅ Scout Complete. Top {len(top_candidates)} saved to '{output_file}'")
-        return top_candidates
+        target_df.to_parquet(output_file, index=False)
+        print(f"✅ Scout Complete. Saved to '{output_file}'")
+        return target_df

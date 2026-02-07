@@ -1,0 +1,13 @@
+
+        NAME: Chef Gordon 2
+        CONTACT: chef.gordon.2.86@protonmail.com
+        PHONE: +15 746-812-9780
+        ROLE: Executive Chef
+        WEBSITE: https://www.foodnetwork.com/
+        
+        SUMMARY:
+        Expert in French Cuisine and Kitchen Management. I handle high-pressure environments (Dinner Service).
+        Looking to pivot to Tech because I heard it pays well.
+        
+        SKILLS: Knife Skills, Sauce Making, Inventory Management, HACCP.
+        

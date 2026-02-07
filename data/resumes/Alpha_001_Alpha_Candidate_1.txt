@@ -1,0 +1,19 @@
+
+        NAME: Alpha Candidate 1
+        CONTACT: alpha.candidate.1.29@outlook.com | +14 721-455-5710
+        ROLE: Senior Systems Architect
+        LINKS: https://tamalsen.dev/, https://www.jenniferdewalt.com/
+        
+        Results-driven professional with a track record in Rust and C++.
+
+PROFESSIONAL SUMMARY:
+Implemented a Go pipeline that saved the company 405 hours annually.
+Speaker at Local Meetup 2024.
+Authored multiple libraries in C++ downloaded over 766209 times.
+        
+        TECHNICAL ARSENAL: Rust, C++, Go, Linux, Kernel, Embedded, Assembly, Python, PyTorch, TensorFlow, CUDA, LLM, RAG, LangChain
+        
+        EXPERIENCE:
+        - Principal Engineer at TechCorp (2018-Present): Led the migration from monolith to microservices using Rust.
+        - Senior Dev at StartupX (2014-2018): Scaled user base to 1M+ using C++ and Go.
+        

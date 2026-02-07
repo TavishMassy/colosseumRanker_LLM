@@ -1,0 +1,19 @@
+
+        NAME: Alpha Candidate 0
+        CONTACT: alpha.candidate.0.70@dev-hub.io | +6 710-900-3963
+        ROLE: Senior Systems Architect
+        LINKS: https://overreacted.io/, https://brittanychiang.com/
+        
+        Highly motivated Systems Architect with 8 years of experience.
+
+PROFESSIONAL SUMMARY:
+Reduced latency by 66% using advanced C++ techniques.
+Speaker at ReactConf 2024.
+Authored multiple libraries in C++ downloaded over 658723 times.
+        
+        TECHNICAL ARSENAL: Rust, C++, Go, Linux, Kernel, Embedded, Assembly, Python, PyTorch, TensorFlow, CUDA, LLM, RAG, LangChain
+        
+        EXPERIENCE:
+        - Principal Engineer at TechCorp (2018-Present): Led the migration from monolith to microservices using Rust.
+        - Senior Dev at StartupX (2014-2018): Scaled user base to 1M+ using C++ and Go.
+        

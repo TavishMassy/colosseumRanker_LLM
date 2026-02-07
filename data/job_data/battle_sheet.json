@@ -1,46 +1,46 @@
 {
-  "role": "Junior Web Developer",
-  "summary_for_vector_search": "An ambitious early-career developer with a solid foundation in core frontend technologies (HTML, CSS, JavaScript) and exposure to modern libraries like React or Vue. The ideal candidate demonstrates a strong aptitude for learning, actively contributes to codebases via Git, and showcases technical competence through a personal portfolio or GitHub activity. They should be prepared to thrive in a collaborative, agile environment where mentorship and rapid skill acquisition are key components of the role.",
+  "role": "Senior Systems Architect",
+  "location_preference": "Remote",
+  "summary_for_vector_search": "A high-level technical leader with over 8 years of experience in designing scalable distributed systems and migrating legacy monoliths to microservices. The ideal candidate possesses deep expertise in low-level systems programming (Rust, Go, C++) combined with modern AI infrastructure knowledge (PyTorch, LLMs). They must demonstrate a track record of technical leadership, architectural decision-making for high-traffic environments, and the ability to bridge the gap between complex infrastructure and AI application layers.",
   "must_haves": [
-    "Proficiency in HTML5 and CSS3 (Flexbox/Grid)",
-    "Strong grasp of JavaScript (ES6+ syntax)",
-    "Basic experience with a modern framework (React.js, Vue.js, or Angular)",
-    "Version Control knowledge (Git/GitHub flows)",
-    "Understanding of Responsive Web Design principles"
+    "8+ years of experience in Systems Architecture or Principal Engineering",
+    "Expertise in Systems Programming (Rust, Go, or C++)",
+    "Proven track record of Monolith-to-Microservices migration",
+    "Deep knowledge of Container Orchestration (Kubernetes/Docker) and Cloud Infrastructure (AWS)"
   ],
   "nice_to_haves": [
-    "Experience with TypeScript",
-    "Basic Backend knowledge (Node.js, Python, or PHP)",
-    "Familiarity with CSS Preprocessors (SASS/LESS) or Tailwind",
-    "Understanding of RESTful APIs",
-    "Exposure to UI/UX design tools (Figma, Adobe XD)"
+    "Experience with AI/ML infrastructure (PyTorch, CUDA, LLMs)",
+    "Open Source contributions or public technical speaking",
+    "Background in Kernel development or Embedded Systems",
+    "Fluency in Python for scripting/automation"
   ],
   "keywords_for_scan": [
-    "HTML5",
-    "CSS3",
-    "JavaScript",
-    "ES6",
-    "React",
-    "Vue",
-    "Angular",
-    "Git",
-    "GitHub",
-    "Responsive",
-    "Frontend",
-    "DOM",
-    "JSON",
-    "API",
-    "Bootstrap",
-    "Tailwind",
-    "Agile",
-    "Debugging",
-    "NPM",
-    "Webpack"
+    "Rust",
+    "Go",
+    "C++",
+    "Linux",
+    "Kernel",
+    "Assembly",
+    "Python",
+    "PyTorch",
+    "TensorFlow",
+    "CUDA",
+    "LLM",
+    "RAG",
+    "LangChain",
+    "Kubernetes",
+    "Docker",
+    "AWS",
+    "Microservices",
+    "Architecture",
+    "Scalability",
+    "Distributed"
   ],
   "deal_breakers": [
-    "Zero knowledge of Version Control (Git)",
-    "Inability to explain basic DOM manipulation",
-    "Lack of foundational HTML/CSS knowledge (relying solely on drag-and-drop tools)"
+    "Lack of backend/systems engineering experience (e.g., Frontend-only background)",
+    "No experience with high-scale or distributed systems",
+    "Inability to demonstrate architectural ownership",
+    "Reliance solely on high-level abstractions without understanding underlying mechanics"
   ],
-  "cultural_vibe": "Growth-oriented and mentorship-focused environment that values curiosity, proactive problem-solving, and the ability to adapt quickly to new technologies."
+  "cultural_vibe": "Engineering-first environment valuing raw technical depth, autonomous problem solving, and brutal efficiency. We prefer builders who understand the entire stack from the kernel to the cloud."
 }

@@ -4,6 +4,7 @@ import json
 import random
 import requests
 import pandas as pd
+import numpy as np
 from pathlib import Path
 from bs4 import BeautifulSoup
 from rich.progress import Progress
@@ -19,9 +20,6 @@ RESULT_DIR = DATA_DIR / "result"
 
 # For jr/mid level roles and 5000 for senior ones
 RESUME_SIZE = 3000
-
-# Only these candidates get sorted. Everyone else fights the Gatekeeper.
-WINNERS_CIRCLE_SIZE = 10
 
 class FactChecker:
     def __init__(self) -> None:
@@ -104,20 +102,26 @@ class Colosseum:
         if pd.notna(current_val) and current_val != "":
             return
 
-        # 3. Handle contact_info safely
-        contact_info = self.df.at[idx, 'contact_info']
-        if isinstance(contact_info, str):
-            try:
-                contact_info = json.loads(contact_info)
-            except:
-                contact_info = {}
-        
-        # Ensure contact_info is a dict
-        if not isinstance(contact_info, dict):
-            contact_info = {}
+        links = []
+
+        if 'links' in self.df.columns:
+            val = self.df.at[idx, 'links']
+            
+            # Handle actual lists (if pandas kept the type)
+            if isinstance(val, (list, tuple, np.ndarray)): 
+                links = list(val)
+            # Handle stringified lists from Parquet
+            elif isinstance(val, str) and val.strip() not in ["", "N/A", "[]"]:
+                # Robust cleaning: remove brackets, then split, then strip quotes/spaces
+                clean_val = val.strip("[]")
+                links = [l.strip().strip("'\"") for l in clean_val.split(",") if l.strip()]
+
+        if not links:
+            self.df.at[idx, 'evidence'] = "No links provided."
+            return
 
         # 4. Extract links (handling both list and numpy/pandas series)
-        raw_links = contact_info.get('links', [])
+        raw_links = links
         if isinstance(raw_links, (list, tuple)):
             links = list(raw_links)
         elif hasattr(raw_links, 'tolist'): # Handle numpy/pandas types
@@ -152,6 +156,9 @@ class Colosseum:
         """Disqualifies candidates flagged as High Risk by the Auditor."""
         print(f"🛡️  Security Sweep: Auditing candidate risk levels...")
         
+        if 'rank' not in self.df.columns:
+            self.df['rank'] = 0
+
         disqualified_count = 0
         
         for idx, row in self.df.iterrows():
@@ -164,7 +171,7 @@ class Colosseum:
             
             # 🚨 DISQUALIFICATION TRIGGER
             if meta.get('risk') == "High":
-                reason = meta.get('risk_reason', 'Flagged by security audit')
+                reason = meta.get('reason', 'Flagged by security audit')
                 self._log_event(row['id'], f"🚫 DISQUALIFIED: {reason}")
                 # Move them to a rank that is impossible to reach (e.g., 999)
                 self.df.at[idx, 'rank'] = 999 
@@ -177,7 +184,17 @@ class Colosseum:
     def _get_dossier(self, candidate_id) -> str:
         self._ensure_evidence(candidate_id)
         row = self.df.loc[self.df['id'] == candidate_id].iloc[0]
-        return f"ID: {row['id']}\nRESUME CONTENT: {row['safe_text'][:RESUME_SIZE]}\nVERIFIED LINKS: {row['evidence']}"
+        
+        # We add a clear "TRUTH" label to the evidence so the AI knows it's the anchor
+        dossier = f"""
+        ID: {row['id']}
+        CANDIDATE CLAIMS (Resume): 
+        {row['safe_text'][:RESUME_SIZE]}
+        
+        GROUND TRUTH EVIDENCE (Scraped Content): 
+        {row['evidence']}
+        """
+        return dossier
 
     def _battle(self, id_a, id_b, mode="gatekeeper"):
         role_context = f"""
@@ -200,7 +217,7 @@ class Colosseum:
         if not result:
             print(f"\n🚨 [CRITICAL ERROR] The AI Engine is unresponsive.")
             # Default to A winning to prevent crash, but log it
-            return {"winner_id": id_b, "reason": "AI Failed, Default Win to Gatekeeper."}
+            return {"winner_id": id_b, "narrative": "AI Failed, Default Win to Gatekeeper."}
 
         if isinstance(result, list) and len(result) > 0:
             result = result[0]
@@ -235,23 +252,24 @@ class Colosseum:
             
             outcome = self._battle(candidate_id, opponent_id, mode="ranker")
             winner = outcome.get('winner_id')
-            reason = outcome.get('reason', 'No reason')
+            narrative = outcome.get('narrative', 'No log')
 
             if winner == candidate_id:
                 # Challenger WON. They belong higher (lower index).
-                self._log_event(candidate_id, f"✅ BEAT Rank #{mid+1} ({opponent_id[:6]}): {reason[:50]}...")
-                self._log_event(opponent_id, f"❌ LOST to Challenger ({candidate_id[:6]}): {reason[:50]}...")
+                self._log_event(candidate_id, f"✅ BEAT Rank #{mid+1} ({opponent_id[:6]}): {narrative[:50]}...")
+                self._log_event(opponent_id, f"❌ LOST to Challenger ({candidate_id[:6]}): {narrative[:50]}...")
                 high = mid - 1
             else:
                 # Challenger LOST. They belong lower (higher index).
-                self._log_event(candidate_id, f"❌ LOST to Rank #{mid+1} ({opponent_id[:6]}): {reason[:50]}...")
-                self._log_event(opponent_id, f"🛡️ DEFENDED against ({candidate_id[:6]}): {reason[:50]}...")
+                self._log_event(candidate_id, f"❌ LOST to Rank #{mid+1} ({opponent_id[:6]}): {narrative[:50]}...")
+                self._log_event(opponent_id, f"🛡️ DEFENDED against ({candidate_id[:6]}): {narrative[:50]}...")
                 low = mid + 1
                 
         return low
 
-    def run_tournament(self, test_mode=False) -> list:
-        self.purge_high_risk()
+    def run_tournament(self, winners_circle=10, take_risk = False) -> list:
+        if not take_risk:
+            self.purge_high_risk()
 
         candidates = self.df['id'].tolist()
         if not candidates:
@@ -261,7 +279,7 @@ class Colosseum:
         # CONSTANT: The size of the "Winner's Circle"
         
         print(f"🏟️  The Colosseum is Open. {len(candidates)} candidates queuing...")
-        print(f"🛡️  Winner's Circle Size: {WINNERS_CIRCLE_SIZE}")
+        print(f"🛡️  Winner's Circle Size: {winners_circle}")
         
         ranked_list = []
 
@@ -272,7 +290,7 @@ class Colosseum:
                 cand_name = newcomer_id[:6]
                 
                 # --- BUILD THE LIST ---
-                if len(ranked_list) < WINNERS_CIRCLE_SIZE:
+                if len(ranked_list) < winners_circle:
                     if not ranked_list:
                         ranked_list.append(newcomer_id)
                         self._log_event(newcomer_id, "🏁 First Entrant (Seeded #1)")
@@ -284,24 +302,24 @@ class Colosseum:
                         rank_display = insert_pos + 1
                         self._log_event(newcomer_id, f"🏅 Placed at Rank #{rank_display}")
 
-                # --- GATEKEEPER MODE (>= 10) ---
+                # --- GATEKEEPER MODE (>= winners_circle) ---
                 else:
                     gatekeeper_id = ranked_list[-1] # The person at Rank #10
-                    print(f"\n🛡️  Gatekeeper Challenge: {cand_name} vs Rank #{WINNERS_CIRCLE_SIZE} ({gatekeeper_id[:6]})")
+                    print(f"\n🛡️  Gatekeeper Challenge: {cand_name} vs Rank #{winners_circle} ({gatekeeper_id[:6]})")
                     
                     outcome = self._battle(newcomer_id, gatekeeper_id, mode="gatekeeper")
                     winner = outcome.get('winner_id')
-                    reason = outcome.get('reason', 'No reason')
+                    narrative = outcome.get('narrative', 'No log')
 
                     if winner == gatekeeper_id:
                         # REJECTED
-                        self._log_event(newcomer_id, f"❌ REJECTED by Gatekeeper: {reason[:50]}...")
+                        self._log_event(newcomer_id, f"❌ REJECTED by Gatekeeper: {narrative[:50]}...")
                         self._log_event(gatekeeper_id, f"🛡️ DEFENDED spot against {cand_name}")
                         print(f"   🚫 Rejected.")
                         
                     else:
                         # ACCEPTED -> OLD #10 FIRED
-                        self._log_event(gatekeeper_id, f"💀 ELIMINATED by Newcomer {cand_name}: {reason[:50]}...")
+                        self._log_event(gatekeeper_id, f"💀 ELIMINATED by Newcomer {cand_name}: {narrative[:50]}...")
                         self._log_event(newcomer_id, f"⚔️  KILLED the Gatekeeper. Entering Ranking Phase...")
                         print(f"   ✅ Gatekeeper Defeated! Ranking {cand_name} now...")
                         
@@ -319,25 +337,30 @@ class Colosseum:
                 if len(ranked_list) % 3 == 0:
                     self.df.to_parquet(RESULT_DIR / "candidates_processed.parquet", index=False)
                 
-                progress.update(task, advance=1)
-                
-                if test_mode and len(ranked_list) >= 3: break
+                progress.update(task, advance=1)                
 
         # --- FINAL SORT & SAVE ---
-        print("\n🧹 Finalizing Ranks & Sorting...")
+        print("\n🧹 Finalizing Ranks & Saving to Disk...")
         
-        # 1. Map Top 10 to Ranks 1-10
+        # 1. Create the mapping from the winners circle
         rank_map = {cid: i for i, cid in enumerate(ranked_list, 1)}
 
-        # 2. Identify candidates NOT in the Top 10
-        remaining_candidates = self.df[~self.df['id'].isin(ranked_list)].copy()
+        # 2. Apply the map to the DataFrame using 'Rank' (Capitalized)
+        # We use fillna(999) for candidates who didn't make the top tier
+        self.df['Rank'] = self.df['id'].map(rank_map).fillna(999).astype(int)
 
-        # 3. Sort: Rank 1, 2.. 10, 11....
-        for i, (idx, row) in enumerate(remaining_candidates.iterrows(), start=WINNERS_CIRCLE_SIZE + 1):
-            rank_map[row['id']] = i     
-            
-        # 4. Apply the map and sort
-        self.df['rank'] = self.df['id'].map(rank_map).astype(int)
-        self.df = self.df.sort_values('rank', ascending=True)
+        # 3. Handle ranks for remaining candidates (outside winners_circle)
+        mask = self.df['Rank'] == 999
+        if mask.any():
+            remaining_indices = self.df[mask].index
+            for i, idx in enumerate(remaining_indices, start=len(ranked_list) + 1):
+                self.df.at[idx, 'Rank'] = i
+
+        # 4. Sort by Rank so Rank #1 is at the top of the Parquet
+        self.df = self.df.sort_values('Rank', ascending=True)
+
+        # 5. OVERWRITE the processed file so Auditor Phase 7/PDF can read it
+        self.df.to_parquet(RESULT_DIR / "candidates_processed.parquet", index=False)
+        print(f"✅ Tournament Finalized. Standings saved.")
 
         return ranked_list

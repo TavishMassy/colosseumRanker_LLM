@@ -1,6 +1,0 @@
-NAME: James Gosling-ish
-EMAIL: james.gosling-ish50@protonmail.com
-PHONE: +51-976-7733
-ROLE: Software Engineer
-LINK: https://leerob.io/
-EXP: 15 Yrs
