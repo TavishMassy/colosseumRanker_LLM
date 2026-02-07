@@ -1,3 +1,4 @@
+import re
 import json
 from pathlib import Path
 from fpdf import FPDF
@@ -41,7 +42,6 @@ class PDFReport(FPDF):
         self.set_x(15)
 
     def candidate_card(self, cand):
-        """Redesigned Dossier: Contact & Links moved above Risk"""
         self.add_page()
         
         # --- BACKGROUND & BORDER ---
@@ -50,7 +50,7 @@ class PDFReport(FPDF):
         self.set_draw_color(40, 40, 60)
         self.rect(10, 10, 190, 277, 'D')
 
-        # --- HEADER: RANK & NAME ---
+        # --- HEADER ---
         rank = str(cand.get('Rank', '?'))
         name = self.clean_text(cand.get('Name', 'N/A'))
         
@@ -71,53 +71,87 @@ class PDFReport(FPDF):
         source = self.clean_text(cand.get('file_name', 'Source Unknown'))
         self.cell(100, 6, f"File: {source}", 0, 1, 'L')
 
-        # --- VITALS & CONTACT (Stacked Left) ---
+        # ==========================================================
+        #                 THE TWO-COLUMN LAYOUT
+        # ==========================================================
+        
+        # --- LEFT COLUMN: VITALS (X=15) ---
         self.set_xy(15, 45)
         self.set_font('Helvetica', 'B', 9.5)
         self.set_text_color(60, 60, 60)
-        yoe = cand.get('Years Exp', '0')
+        
+        yoe = str(cand.get('Years Exp', '0'))
         loc = self.clean_text(cand.get('Location', 'Not Disclosed'))
         
-        self.cell(100, 5, f"EXPERIENCE: {yoe} YRS", 0, 1, 'L')
+        # Vitals
+        self.cell(90, 5, f"EXPERIENCE: {yoe} YRS", 0, 1, 'L')
         self.set_x(15)
-        self.cell(100, 5, f"LOCATION: {loc}", 0, 1, 'L')
+        self.cell(90, 5, f"LOCATION: {loc}", 0, 1, 'L')
         
-        # Contact Info
-        self.ln(1)
+        # Contact
+        self.ln(2)
         self.set_x(15)
         self.set_font('Helvetica', 'B', 9)
         self.set_text_color(50, 50, 150)
+        
         email = self.clean_text(str(cand.get('Email', 'N/A'))).strip("[]'")
         phone = self.clean_text(str(cand.get('Phone', 'N/A'))).strip("[]'")
-        self.cell(100, 5, f"CONTACT: {email}", 0, 1, 'L')
+        
+        # Truncate extremely long emails to fit the column
+        if len(email) > 35: email = email[:32] + "..."
+        
+        self.cell(90, 5, f"EMAIL: {email}", 0, 1, 'L')
         self.set_x(15)
-        self.cell(100, 5, f"PHONE: {phone}", 0, 1, 'L')
+        self.cell(90, 5, f"PHONE: {phone}", 0, 1, 'L')
 
-        # --- NEW: LINKS SECTION ---
-        # Assuming 'Links' is a list or string in your JSON
-        raw_links = cand.get('Links', cand.get('links', []))
-        if isinstance(raw_links, str):
-            # Clean up string artifacts if they exist
-            raw_links = raw_links.strip("[]'").split(',')
+        # --- RIGHT COLUMN: LINKS (X=110) ---
+        # We process links first using the Regex Fix
+        raw_input = cand.get('Links', cand.get('links', []))
+        links_text = str(raw_input)
+        url_pattern = r'(https?://[^\s,\'\"\]\[<>|]+|www\.[^\s,\'\"\]\[<>|]+)'
+        found_links = re.findall(url_pattern, links_text)
+        
+        clean_links = []
+        for link in found_links:
+            link = link.strip(".,'\"").replace("%20", "")
+            if link not in clean_links and len(link) > 5:
+                clean_links.append(link)
+
+        # Draw the Links Column
+        # Start Y at same height as Vitals (45)
+        current_y = 45 
+        self.set_font('Helvetica', 'I', 8)
+        self.set_text_color(30, 100, 200) # Blue
+        
+        # Header for Links
+        self.set_xy(110, 45)
+        self.set_font('Helvetica', 'B', 8)
+        self.set_text_color(100, 100, 100) # Grey Header
+        self.cell(80, 5, "LINKS:", 0, 1, 'L')
         
         self.set_font('Helvetica', 'I', 8)
-        self.set_text_color(30, 100, 200) # Professional Link Blue
+        self.set_text_color(30, 100, 200) # Back to Blue
         
-        for link in raw_links[:3]: # Limit to top 3 links to prevent box overlap
-            clean_link = str(link).strip().strip("'")
-            if clean_link and clean_link != "N/A":
-                self.set_x(15)
-                # We use .write so it can be a clickable link in the PDF
-                self.write(5, f"LINK: {clean_link}", clean_link)
-                self.ln(5)
+        for i, link in enumerate(clean_links[:4]): # Show up to 4 links
+            self.set_xy(110, 50 + (i * 5))
+            # Truncate link text for display, but keep full link clickable
+            display_text = link.replace("https://", "").replace("www.", "")
+            if len(display_text) > 40:
+                display_text = display_text[:37] + "..."
+            
+            self.write(5, f"{display_text}", link)
 
-        # --- RISK EVALUATION BOX ---
+        # ==========================================================
+        #                 RISK BOX (Below Columns)
+        # ==========================================================
+        
         risk = str(cand.get('Risk Level', 'Low'))
         if "High" in risk: r, g, b = 180, 0, 0
         elif "Medium" in risk: r, g, b = 200, 140, 10
         else: r, g, b = 0, 120, 0
         
-        self.set_xy(15, 75)
+        # Move down to Y=80 (safe clearance below columns)
+        self.set_xy(15, 80)
         self.set_draw_color(r, g, b)
         self.set_fill_color(r, g, b)
         self.set_text_color(255, 255, 255)

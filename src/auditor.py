@@ -155,11 +155,13 @@ class Auditor:
         BATTLE HISTORY:{raw_log}
         CURRENT RANK:{rank}
         REQUIREMENTS:
-        1. Write a detailed professional justification explaining WHY they are better option then others.
+        1. Write a concise professional justification explaining WHY they are better option then others.
         2. Mention specific technical edges or experience that placed them above their competitor.
         3. Use a formal, objective tone (no JSON, no brackets).
-        4. Do make it sound like selection process not a battle.
-        5. Start directly with: "{real_name} is better than other candidates because..."
+        4. Make it sound like selection process not a battle.
+        5. Do not use ID instead use name or 'candidate'.
+        6. DO NOT invent skills, projects, or experience (mention only when explicitly written).
+        7. Start directly with: "{real_name} is better than other candidates because..."
         """
 
         narrative = self.engine.think(prompt)
