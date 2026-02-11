@@ -1,5 +1,4 @@
 import json
-import time
 import sys
 import math
 import pandas as pd
@@ -12,6 +11,7 @@ from src.extractor import ResumeExtractor
 from src.oracle import run_oracle_rescue  
 from src.scout import SmartScout
 from src.reranker import ReRanker
+from src.masquerade import Masquerade
 from src.colosseum import Colosseum
 from src.auditor import Auditor
 from src.datapack import DataPackGenerator
@@ -25,9 +25,10 @@ RESULT_DIR = DATA_DIR / "result"
 SHEET_PATH = DATA_DIR / "job_data" / "battle_sheet.json"
 
 # 🔒 SAFETY VALVE: Colosseum will NEVER fight more than this many people.
-MAX_TOURNAMENT_SIZE = 20
-WINNERS_CIRCLE = 5
-TAKE_RISK = True
+MAX_TOURNAMENT_SIZE = 50
+WINNERS_CIRCLE = 10
+TAKE_RISK = False
+RESUME_LEN = 3000 # For jr/mid level roles and 5000 for senior ones
 
 # Ensure directories exist
 for d in [DATA_DIR, RAW_DIR, RESULT_DIR]:
@@ -149,10 +150,11 @@ class AgencyControl:
 
     def run_masquerade(self):
         # --- ANTI BIAS BLOCK ---
+        reranked_file = self.result_dir / "candidates_reranked.parquet"
+        df = pd.read_parquet(reranked_file)
         console.print(Panel("[bold yellow]Phase 5: 🎭 Masquerade Protocol (Blind Hiring)[/bold yellow]", border_style="yellow"))
-        from src.auditor import Auditor # Ensure import is available
-        auditor = Auditor(MAX_TOURNAMENT_SIZE)
-        auditor.mask_candidates() 
+        masquerade = Masquerade(df, RESUME_LEN)
+        masquerade.mask_candidates() 
                
     def run_colosseum(self):
         console.print(Panel("[bold red]Phase 6: The Colosseum (LLM Tournament)[/bold red]", border_style="red"))
@@ -168,7 +170,7 @@ class AgencyControl:
         with open(self.sheet_path, 'r') as f: sheet = json.load(f)
         console.print(f"[bold green]📋 Battle Criteria: {sheet['role']}[/bold green]")
 
-        colosseum = Colosseum(df, sheet)
+        colosseum = Colosseum(df, sheet, RESUME_LEN)
         top_ids = colosseum.run_tournament(winners_circle=WINNERS_CIRCLE, take_risk=TAKE_RISK) 
         
         if not top_ids: return
@@ -186,7 +188,7 @@ class AgencyControl:
 
     def run_auditor(self):
         console.print(Panel("[bold purple]Phase 7: Auditor (Deep Analysis)[/bold purple]", border_style="purple"))
-        Auditor(MAX_TOURNAMENT_SIZE).generate_report()
+        Auditor(MAX_TOURNAMENT_SIZE, RESUME_LEN).generate_report()
 
     def export_lite_results(self):
         """Phase 8: Generating Professional Data Pack (CSV)."""
@@ -213,7 +215,7 @@ class AgencyControl:
             return
 
         # List of folders to purge
-        folders_to_purge = [self.result_dir] # self.raw_dir, self.quarantine_dir, 
+        folders_to_purge = [self.raw_dir, self.quarantine_dir, self.result_dir] # self.raw_dir, self.quarantine_dir, 
         
         for folder in folders_to_purge:
             if folder.exists():
@@ -229,6 +231,7 @@ class AgencyControl:
         
         console.print("\n[bold green]✅ System Reset Complete. All data wiped.[/bold green]")
         console.print("[dim]Exiting application...[/dim]")
+        sys.exit(0)
 
     def menu(self):
         while True:
@@ -262,7 +265,7 @@ class AgencyControl:
             if "8" in choice: self.export_lite_results()
             if "9" in choice: self.run_designer()
             elif "r" in choice: self.reset_system()
-            elif "q" in choice: break
+            if "q" in choice: break
 
 if __name__ == "__main__":
     app = AgencyControl()

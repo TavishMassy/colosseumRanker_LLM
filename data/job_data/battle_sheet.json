@@ -1,46 +1,42 @@
 {
   "role": "Senior Systems Architect",
-  "location_preference": "Remote",
-  "summary_for_vector_search": "A high-level technical leader with over 8 years of experience in designing scalable distributed systems and migrating legacy monoliths to microservices. The ideal candidate possesses deep expertise in low-level systems programming (Rust, Go, C++) combined with modern AI infrastructure knowledge (PyTorch, LLMs). They must demonstrate a track record of technical leadership, architectural decision-making for high-traffic environments, and the ability to bridge the gap between complex infrastructure and AI application layers.",
+  "location_preference": "Remote / India (Jaipur, Bangalore, Mumbai)",
+  "summary_for_vector_search": "A high-impact Staff Engineer or Senior Architect capable of designing scalable distributed systems handling 1M+ RPS. The ideal candidate has deep expertise in backend languages (Rust, Go, or Java), cloud-native infrastructure (Kubernetes, AWS), and a product-first mindset. We prioritize candidates with immediate availability or short notice periods over corporate lifers with 3-month lock-ins.",
   "must_haves": [
-    "8+ years of experience in Systems Architecture or Principal Engineering",
-    "Expertise in Systems Programming (Rust, Go, or C++)",
-    "Proven track record of Monolith-to-Microservices migration",
-    "Deep knowledge of Container Orchestration (Kubernetes/Docker) and Cloud Infrastructure (AWS)"
+    "5+ Years of Backend Engineering (Rust, Go, or Java)",
+    "Experience with Distributed Systems & Microservices at Scale",
+    "Hands-on expertise with Kubernetes and AWS",
+    "System Design for High-Throughput applications (Payments/Logistics)"
   ],
   "nice_to_haves": [
-    "Experience with AI/ML infrastructure (PyTorch, CUDA, LLMs)",
-    "Open Source contributions or public technical speaking",
-    "Background in Kernel development or Embedded Systems",
-    "Fluency in Python for scripting/automation"
+    "Experience in Fintech or Logistics domains",
+    "Open Source contributions",
+    "Knowledge of AI/ML pipelines"
   ],
   "keywords_for_scan": [
     "Rust",
     "Go",
-    "C++",
-    "Linux",
-    "Kernel",
-    "Assembly",
-    "Python",
-    "PyTorch",
-    "TensorFlow",
-    "CUDA",
-    "LLM",
-    "RAG",
-    "LangChain",
+    "Golang",
+    "Java",
+    "Spring",
     "Kubernetes",
     "Docker",
     "AWS",
+    "Kafka",
     "Microservices",
-    "Architecture",
-    "Scalability",
-    "Distributed"
+    "Distributed",
+    "Scale",
+    "Payments",
+    "Logistics",
+    "API",
+    "Backend",
+    "Architecture"
   ],
   "deal_breakers": [
-    "Lack of backend/systems engineering experience (e.g., Frontend-only background)",
-    "No experience with high-scale or distributed systems",
-    "Inability to demonstrate architectural ownership",
-    "Reliance solely on high-level abstractions without understanding underlying mechanics"
+    "Notice Period > 60 Days (Immediate Disqualification)",
+    "Job Hopping (Average tenure < 1 year)",
+    "No Contact Information (Ghost Profiles)",
+    "Frontend-only experience"
   ],
-  "cultural_vibe": "Engineering-first environment valuing raw technical depth, autonomous problem solving, and brutal efficiency. We prefer builders who understand the entire stack from the kernel to the cloud."
+  "cultural_vibe": "Fast-paced product engineering environment. We value shipping code over bureaucracy. We need 'Builders' who can deploy on Day 1, not 'Managers' who need 3 months to join."
 }

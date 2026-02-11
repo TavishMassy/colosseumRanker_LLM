@@ -2,81 +2,138 @@
   {
     "rank":1,
     "battle_log":[
-      "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
-      "\u2705 BEAT Rank #2 (3ff4d7): CANDIDATE_f7c91ccacd4ef279ac730bc8d114b77a is the ...",
-      "\u2705 BEAT Rank #1 (26f838): CANDIDATE_f7c91ccacd4ef279ac730bc8d114b77a is the ...",
-      "\ud83c\udfc5 Placed at Rank #1"
+      "\u2705 BEAT Rank #1 (94ad8b): CANDIDATE_0d847e87f2876256549ef1e03f76f904 is the ...",
+      "\ud83c\udfc5 Placed at Rank #1",
+      "\ud83d\udee1\ufe0f DEFENDED against (f60dc5): CANDIDATE_0d847e87f2876256549ef1e03f76f904 is the ..."
     ],
-    "evidence":"No links provided.",
-    "id":"f7c91ccacd4ef279ac730bc8d114b77a",
-    "safe_text":"\n        NAME: CANDIDATE_f7c91ccacd4ef279ac730bc8d114b77a\n        ROLE: Elite Hacker\n        \n        Highly motivated Security Researcher with 10 years of experience.\n\nPROFESSIONAL SUMMARY:\nSpeaker at KubeCon 2024.\nReduced latency by 67% using advanced Kernel techniques.\nAuthored multiple libraries in C++ downloaded over 380222 times.\n        \n        SKILLS: Rust, C++, Go, Linux, Kernel, Embedded, Assembly\n        NOTE: I do not provide contact info. Find me if you can.\n        "
+    "id":"0d847e87f2876256549ef1e03f76f904",
+    "safe_text":"\n        NAME: CANDIDATE_0d847e87f2876256549ef1e03f76f904\n        LOCATION: {LOCATION.}\n        CONTACT: {EMAIL.} | {PHONE.}\n        LINKS: {LINK.}\n        \n        SUMMARY:\n        Staff Engineer at Cred handling 1M+ RPS.\n        Currently serving notice period (Last working day: Next Friday).\n        \n        EXPERIENCE:\n        - Staff Engineer @ Zomato (2020-Present): Scaled payments engine.\n        - Senior Dev @ Swiggy (2016-2020): Built logistics layer.\n        \n        NOTICE PERIOD: Serving Notice (10 Days remaining).\n        SKILLS: Rust, Go, Kubernetes, AWS, Kafka, Microservices\n        \n        \n        GROUND TRUTH EVIDENCE (Scraped Content): \n        SOURCE [https:\/\/bruno-simon.com]: SCRAPED CONTENT: ...\n        "
   },
   {
     "rank":2,
     "battle_log":[
-      "\u2705 BEAT Rank #2 (6ad1f1): CANDIDATE_26f8383128742acdc3f9a18eb1a4f573 is the ...",
-      "\u2705 BEAT Rank #1 (097991): CANDIDATE_26f8383128742acdc3f9a18eb1a4f573 is the ...",
-      "\ud83c\udfc5 Placed at Rank #1",
-      "\ud83d\udee1\ufe0f DEFENDED against (3ff4d7): CANDIDATE_26f8383128742acdc3f9a18eb1a4f573 is the ...",
-      "\u274c LOST to Challenger (f7c91c): CANDIDATE_f7c91ccacd4ef279ac730bc8d114b77a is the ..."
+      "\u2705 BEAT Rank #2 (94ad8b): CANDIDATE_f60dc5ea7466f028f4be9a09a1de18c2 is the ...",
+      "\u274c LOST to Rank #1 (0d847e): CANDIDATE_0d847e87f2876256549ef1e03f76f904 is the ...",
+      "\ud83c\udfc5 Placed at Rank #2",
+      "\ud83d\udee1\ufe0f DEFENDED against (42ac97): CANDIDATE_f60dc5ea7466f028f4be9a09a1de18c2 is the ..."
     ],
-    "evidence":"SOURCE [https:\/\/github.com\/torvalds]: SCRAPED CONTENT: Skip to content Navigation Menu Platform Solutions Resources Open Source Enterprise Pricing Sign in Sign up torvalds Follow Overview Repositories 11 Projects Packages Stars 2 torvalds Follow Linus Torvalds torvalds Follow 283k followers \u00b7 0 following Linux Foundation Portland, OR Achievements x4 x2 x4 Block or Report Pinned Loading linux Public Linux kernel source tree C 217k 60.4k GuitarPedal Public archive Linus learns analog circuits C 1.7k 62 uemacs Public Random version of microemacs with my private modificatons C 1.9k 295 AudioNoise Public Random digital audio effects C 4.2k 195 HunspellColorize Public Wrapper around 'less' to colorize spelling mistakes using Hunspell C 283 12 3,088 contributions in the last year Skip to contributions year list Contribution Graph Day of Week February Feb March Mar April Apr May May June Jun July Jul August Aug September Sep October Oct November Nov December Dec January Jan Sunday Sun Monday Mon Tuesday Tue Wednesday Wed Thursday Thu Friday Fri Saturday Sat Learn how we count contributions Less No contributions. Low contributions. Medium-low contributions. Medium-high contributions. High contributions. More Activity overview Contributed to torvalds\/linux, torvalds\/1590A, torvalds\/GuitarPedal and 3 other repositories Loading Code review Issues Pull requests 100% Commits Contribution activity February 2026 Created 32 commits in 1 repository torvalds\/linux 32 commits Loading Show more activity 2026 2025 2024 2023 2022 2021 2020 2019 2018 20... | SOURCE [https:\/\/www.jenniferdewalt.com\/,]: SCRAPED CONTENT: The page you were looking for doesn't exist. You may have mistyped the address or the page may have moved....",
-    "id":"26f8383128742acdc3f9a18eb1a4f573",
-    "safe_text":"\n        NAME: CANDIDATE_26f8383128742acdc3f9a18eb1a4f573\n        CONTACT: {EMAIL.} | {PHONE.}\n        ROLE: Senior Systems Architect\n        LINKS: {LINK.} {LINK.}\n        \n        Highly motivated Systems Architect with 12 years of experience.\n\nPROFESSIONAL SUMMARY:\nReduced latency by 46% using advanced C++ techniques.\nImplemented a Go pipeline that saved the company 171 hours annually.\nAuthored multiple libraries in C++ downloaded over 602809 times.\n        \n        TECHNICAL ARSENAL: Rust, C++, Go, Linux, Kernel, Embedded, Assembly, Python, PyTorch, TensorFlow, CUDA, LLM, RAG, LangChain\n        \n        EXPERIENCE:\n        - Principal Engineer at TechCorp (2018-Present): Led the migration from monolith to microservices using Rust.\n        - Senior Dev at StartupX (2014-2018): Scaled user base to 1M+ using C++ and Go.\n        "
+    "id":"f60dc5ea7466f028f4be9a09a1de18c2",
+    "safe_text":"\n        NAME: CANDIDATE_f60dc5ea7466f028f4be9a09a1de18c2\n        LOCATION: {LOCATION.}\n        CONTACT: {EMAIL.} | {PHONE.}\n        LINKS: {LINK.}\n        \n        SUMMARY:\n        Staff Engineer at Cred handling 1M+ RPS.\n        Currently serving notice period (Last working day: Next Friday).\n        \n        EXPERIENCE:\n        - Staff Engineer @ Zomato (2020-Present): Scaled payments engine.\n        - Senior Dev @ Swiggy (2016-2020): Built logistics layer.\n        \n        NOTICE PERIOD: Serving Notice (10 Days remaining).\n        SKILLS: Rust, Go, Kubernetes, AWS, Kafka, Microservices\n        \n        \n        GROUND TRUTH EVIDENCE (Scraped Content): \n        SOURCE [https:\/\/bruno-simon.com]: Scrape Failed (Page.goto: Timeout 10000ms exc)\n        "
   },
   {
     "rank":3,
     "battle_log":[
-      "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
-      "\u2705 BEAT Rank #2 (097991): CANDIDATE_3ff4d7633d4b620fd1e9d2e319cf15ad is the ...",
-      "\u274c LOST to Rank #1 (26f838): CANDIDATE_26f8383128742acdc3f9a18eb1a4f573 is the ...",
-      "\ud83c\udfc5 Placed at Rank #2",
-      "\ud83d\udee1\ufe0f DEFENDED against (2d0541): CANDIDATE_3ff4d7633d4b620fd1e9d2e319cf15ad is the ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (7a4ec3): CANDIDATE_3ff4d7633d4b620fd1e9d2e319cf15ad is the ...",
-      "\u274c LOST to Challenger (f7c91c): CANDIDATE_f7c91ccacd4ef279ac730bc8d114b77a is the ..."
+      "\u274c LOST to Rank #2 (f60dc5): CANDIDATE_f60dc5ea7466f028f4be9a09a1de18c2 is the ...",
+      "\u2705 BEAT Rank #3 (94ad8b): CANDIDATE_42ac97e572a83e5b53d3598de0eb374c is the ...",
+      "\ud83c\udfc5 Placed at Rank #3",
+      "\ud83d\udee1\ufe0f DEFENDED against (2198dc): CANDIDATE_42ac97e572a83e5b53d3598de0eb374c is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (6e0fe1): CANDIDATE_42ac97e572a83e5b53d3598de0eb374c is the ..."
     ],
-    "evidence":"No links provided.",
-    "id":"3ff4d7633d4b620fd1e9d2e319cf15ad",
-    "safe_text":"\n        NAME: CANDIDATE_3ff4d7633d4b620fd1e9d2e319cf15ad\n        ROLE: Elite Hacker\n        \n        Visionary leader transforming the Security Researcher landscape.\n\nPROFESSIONAL SUMMARY:\nManaged a budget of $497k for cloud migration projects.\nImplemented a Go pipeline that saved the company 255 hours annually.\nAuthored multiple libraries in C++ downloaded over 563499 times.\n        \n        SKILLS: Rust, C++, Go, Linux, Kernel, Embedded, Assembly\n        NOTE: I do not provide contact info. Find me if you can.\n        "
+    "id":"42ac97e572a83e5b53d3598de0eb374c",
+    "safe_text":"\n        NAME: CANDIDATE_42ac97e572a83e5b53d3598de0eb374c\n        LOCATION: {LOCATION.}\n        CONTACT: {EMAIL.} | {PHONE.}\n        LINKS: {LINK.}\n        \n        SUMMARY:\n        Staff Engineer at Zomato handling 1M+ RPS.\n        Currently serving notice period (Last working day: Next Friday).\n        \n        EXPERIENCE:\n        - Staff Engineer @ Uber (2020-Present): Scaled payments engine.\n        - Senior Dev @ Swiggy (2016-2020): Built logistics layer.\n        \n        NOTICE PERIOD: Serving Notice (10 Days remaining).\n        SKILLS: Rust, Go, Kubernetes, AWS, Kafka, Microservices\n        \n        \n        GROUND TRUTH EVIDENCE (Scraped Content): \n        SOURCE [https:\/\/github.com\/torvalds]: SCRAPED CONTENT: Skip to content Navigation Menu Platform Solutions Resources Open Source Enterprise Pricing Sign in Sign up torvalds Follow Overview Repositories 11 Projects Packages Stars 2 torvalds Follow Linus Torvalds torvalds Follow 284k followers \u00b7 0 following Linux Foundation Portland, OR Achievements x4 x2 x4 Block or Report Pinned Loading linux Public Linux kernel source tree C 217k 60.4k GuitarPedal Public archive Linus learns analog circuits C 1.7k 62 uemacs Public Random version of microemacs with my private modificatons C 1.9k 296 AudioNoise Public Random digital audio effects C 4.2k 195 HunspellColorize Public Wrapper around 'less' to colorize spelling mistakes using Hunspell C 290 12 3,152 contributions in the last year Skip to contributions year list Contribution Graph Day of Week February Feb March Mar April Apr May May June Jun July Jul August Aug September Sep October Oct November Nov December Dec January Jan February Feb Sunday Sun Monday Mon Tuesday Tue Wednesday Wed Thursday Thu Friday Fri Saturday Sat Learn how we count contributions Less No contributions. Low contributions. Medium-low contributions. Medium-high contributions. High contributions. More Activity overview Contributed to torvalds\/linux, torvalds\/1590A, torvalds\/GuitarPedal and 3 other repositories Loading Code review Issues Pull requests 100% Commits Contribution activity February 2026 Created 131 commits in 1 repository torvalds\/linux 131 commits Loading Show more activity 2026 2025 2024 2023 2022 2021 2020 2019 2018 2017 2016 2015 2014 2013 2012 2011 Footer \u00a9 2026 GitHub, Inc. Footer navigation Terms Privacy Security Status Community Docs Contact Manage cookies Do not share my personal information...\n        "
   },
   {
     "rank":4,
     "battle_log":[
-      "\u2705 BEAT Rank #1 (61bea6): CANDIDATE_09799158fb40ce05e4ce582135701664 is the ...",
-      "\ud83c\udfc5 Placed at Rank #1",
-      "\ud83d\udee1\ufe0f DEFENDED against (6ad1f1): CANDIDATE_09799158fb40ce05e4ce582135701664 is the ...",
-      "\u274c LOST to Challenger (26f838): CANDIDATE_26f8383128742acdc3f9a18eb1a4f573 is the ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (94faa6): CANDIDATE_09799158fb40ce05e4ce582135701664 is the ...",
-      "\u274c LOST to Challenger (3ff4d7): CANDIDATE_3ff4d7633d4b620fd1e9d2e319cf15ad is the ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (2d0541): CANDIDATE_09799158fb40ce05e4ce582135701664 is the ...",
-      "\ud83d\udee1\ufe0f DEFENDED against (7a4ec3): CANDIDATE_09799158fb40ce05e4ce582135701664 is the ..."
+      "\ud83c\udfc1 First Entrant (Seeded #1)",
+      "\ud83d\udee1\ufe0f DEFENDED against (0435c5): CANDIDATE_94ad8b7c2a0d9d4325eb2a9bbf4a42d8 is the ...",
+      "\u274c LOST to Challenger (0d847e): CANDIDATE_0d847e87f2876256549ef1e03f76f904 is the ...",
+      "\u274c LOST to Challenger (f60dc5): CANDIDATE_f60dc5ea7466f028f4be9a09a1de18c2 is the ...",
+      "\u274c LOST to Challenger (42ac97): CANDIDATE_42ac97e572a83e5b53d3598de0eb374c is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (2198dc): CANDIDATE_94ad8b7c2a0d9d4325eb2a9bbf4a42d8 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (01451f): CANDIDATE_94ad8b7c2a0d9d4325eb2a9bbf4a42d8 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (300b23): CANDIDATE_94ad8b7c2a0d9d4325eb2a9bbf4a42d8 is the ..."
     ],
-    "evidence":"SOURCE [https:\/\/leerob.io\/,]: SCRAPED CONTENT: 404 This page could not be found.... | SOURCE [https:\/\/bruno-simon.com\/]: Scrape Failed (Page.goto: Timeout 10000ms exc)",
-    "id":"09799158fb40ce05e4ce582135701664",
-    "safe_text":"\n        NAME: CANDIDATE_09799158fb40ce05e4ce582135701664\n        CONTACT: {EMAIL.} | {PHONE.}\n        ROLE: Senior Systems Architect\n        LINKS: {LINK.} {LINK.}\n        \n        Passionate Systems Architect specializing in scalable architecture.\n\nPROFESSIONAL SUMMARY:\nSuccessfully led a team of 10 engineers to deploy critical infrastructure.\nSpeaker at ReactConf 2024.\nReduced latency by 33% using advanced Assembly techniques.\n        \n        TECHNICAL ARSENAL: Rust, C++, Go, Linux, Kernel, Embedded, Assembly, Python, PyTorch, TensorFlow, CUDA, LLM, RAG, LangChain\n        \n        EXPERIENCE:\n        - Principal Engineer at TechCorp (2018-Present): Led the migration from monolith to microservices using Rust.\n        - Senior Dev at StartupX (2014-2018): Scaled user base to 1M+ using C++ and Go.\n        "
+    "id":"94ad8b7c2a0d9d4325eb2a9bbf4a42d8",
+    "safe_text":"\n        NAME: CANDIDATE_94ad8b7c2a0d9d4325eb2a9bbf4a42d8\n        LOCATION: {LOCATION.}\n        CONTACT: {EMAIL.} | {PHONE.}\n        LINKS: {LINK.}\n        \n        SUMMARY:\n        Staff Engineer at Google handling 1M+ RPS.\n        Currently serving notice period (Last working day: Next Friday).\n        \n        EXPERIENCE:\n        - Staff Engineer @ Google (2020-Present): Scaled payments engine.\n        - Senior Dev @ Swiggy (2016-2020): Built logistics layer.\n        \n        NOTICE PERIOD: Serving Notice (10 Days remaining).\n        SKILLS: Rust, Go, Kubernetes, AWS, Kafka, Microservices\n        \n        \n        GROUND TRUTH EVIDENCE (Scraped Content): \n        SOURCE [https:\/\/bruno-simon.com]: Scrape Failed (Page.goto: Timeout 10000ms exc)\n        "
   },
   {
     "rank":5,
     "battle_log":[
-      "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
-      "\u274c LOST to Rank #2 (3ff4d7): CANDIDATE_3ff4d7633d4b620fd1e9d2e319cf15ad is the ...",
-      "\u274c LOST to Rank #3 (097991): CANDIDATE_09799158fb40ce05e4ce582135701664 is the ...",
-      "\u2705 BEAT Rank #4 (6ad1f1): CANDIDATE_2d054187ee50f8bc3a5a5ce6e7b83077 is the ...",
-      "\ud83c\udfc5 Placed at Rank #4",
-      "\ud83d\udee1\ufe0f DEFENDED against (7a4ec3): CANDIDATE_2d054187ee50f8bc3a5a5ce6e7b83077 is the ...",
-      "\ud83d\udee1\ufe0f DEFENDED spot against a31a4b",
-      "\ud83d\udee1\ufe0f DEFENDED spot against dff994",
-      "\ud83d\udee1\ufe0f DEFENDED spot against a2b307",
-      "\ud83d\udee1\ufe0f DEFENDED spot against 3f8ec8",
-      "\ud83d\udee1\ufe0f DEFENDED spot against f4cad1",
-      "\ud83d\udee1\ufe0f DEFENDED spot against 93d419",
-      "\ud83d\udee1\ufe0f DEFENDED spot against 61f53f",
-      "\ud83d\udee1\ufe0f DEFENDED spot against ad1aa2",
-      "\ud83d\udee1\ufe0f DEFENDED spot against 03561a",
-      "\ud83d\udee1\ufe0f DEFENDED spot against 262045"
+      "\u274c LOST to Rank #1 (94ad8b): CANDIDATE_94ad8b7c2a0d9d4325eb2a9bbf4a42d8 is the ...",
+      "\ud83c\udfc5 Placed at Rank #2",
+      "\ud83d\udee1\ufe0f DEFENDED against (2198dc): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (6e0fe1): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (01451f): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (300b23): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (c8cfcf): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (8b7f71): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (006099): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (8fc5b5): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED against (8d17a8): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ..."
     ],
-    "evidence":"No links provided.",
-    "id":"2d054187ee50f8bc3a5a5ce6e7b83077",
-    "safe_text":"\n        NAME: CANDIDATE_2d054187ee50f8bc3a5a5ce6e7b83077\n        ROLE: Elite Hacker\n        \n        Results-driven professional with a track record in Rust and C++.\n\nPROFESSIONAL SUMMARY:\nSuccessfully led a team of 13 engineers to deploy critical infrastructure.\nManaged a budget of $51k for cloud migration projects.\nReduced latency by 33% using advanced Rust techniques.\n        \n        SKILLS: Rust, C++, Go, Linux, Kernel, Embedded, Assembly\n        NOTE: I do not provide contact info. Find me if you can.\n        "
+    "id":"0435c51cbed99559fcec8fd529c3da70",
+    "safe_text":"\n        NAME: CANDIDATE_0435c51cbed99559fcec8fd529c3da70\n        LOCATION: {LOCATION.}\n        CONTACT: {EMAIL.} | {PHONE.}\n        LINKS: {LINK.}\n        \n        SUMMARY:\n        Staff Engineer at Uber handling 1M+ RPS.\n        Currently serving notice period (Last working day: Next Friday).\n        \n        EXPERIENCE:\n        - Staff Engineer @ Cred (2020-Present): Scaled payments engine.\n        - Senior Dev @ Swiggy (2016-2020): Built logistics layer.\n        \n        NOTICE PERIOD: Serving Notice (10 Days remaining).\n        SKILLS: Rust, Go, Kubernetes, AWS, Kafka, Microservices\n        \n        \n        GROUND TRUTH EVIDENCE (Scraped Content): \n        SOURCE [https:\/\/leerob.io]: SCRAPED CONTENT: Lee Robinson I\u2019m a developer and writer. I work at Cursor teaching about AI. Previously, I worked at Vercel. I\u2019ve been coding for 15 years and teaching for the second half. My life\u2019s work is to make technology easy to understand and interesting to learn about. I\u2019m a husband, father, and a massive music fan. I last listened to Slow Burner by Interplanetary Criminal, Original Koffee. Some of my favorite writing includes: Things I Believe Coding Agents & Complexity Budgets Building Low-Level Software with Only Coding Agents How Does Image Compression Work? Developer Marketing Understanding AI You can read my writing or code, or follow me online. I also make videos, advise companies, and do angel investing. Reach out if interested....\n        "
+  },
+  {
+    "rank":6,
+    "battle_log":[
+      "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
+      "\u274c LOST to Rank #5 (0435c5): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\u2705 BEAT Rank #7 (8b7f71): CANDIDATE_8fc5b53c2f599ca5bb7fe1fc9faa3318 is the ...",
+      "\u2705 BEAT Rank #6 (006099): CANDIDATE_8fc5b53c2f599ca5bb7fe1fc9faa3318 is the ...",
+      "\ud83c\udfc5 Placed at Rank #6",
+      "\ud83d\udee1\ufe0f DEFENDED against (8d17a8): CANDIDATE_8fc5b53c2f599ca5bb7fe1fc9faa3318 is the ..."
+    ],
+    "id":"8fc5b53c2f599ca5bb7fe1fc9faa3318",
+    "safe_text":"\n        NAME: CANDIDATE_8fc5b53c2f599ca5bb7fe1fc9faa3318\n        LOCATION: {LOCATION.}\n        CONTACT: {EMAIL.} | {PHONE.}\n        \n        SUMMARY:\n        Team Lead at Accenture with 8 years of Java\/Springboot experience.\n        Expert in banking domains.\n        \n        EXPERIENCE:\n        - Team Lead @ Accenture (2018-Present): Managing 20 devs.\n        \n        NOTICE PERIOD: 3 Months (Negotiable).\n        SKILLS: Java, Spring Boot, Oracle, Jenkins, SOAP API.\n        \n        \n        GROUND TRUTH EVIDENCE (Scraped Content): \n        No links provided.\n        "
+  },
+  {
+    "rank":7,
+    "battle_log":[
+      "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
+      "\u274c LOST to Rank #5 (0435c5): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\u2705 BEAT Rank #7 (006099): CANDIDATE_8d17a87cd654ebf60d77b3abdd5cbaea is the ...",
+      "\u274c LOST to Rank #6 (8fc5b5): CANDIDATE_8fc5b53c2f599ca5bb7fe1fc9faa3318 is the ...",
+      "\ud83c\udfc5 Placed at Rank #7"
+    ],
+    "id":"8d17a87cd654ebf60d77b3abdd5cbaea",
+    "safe_text":"\n        Name:CANDIDATE_8d17a87cd654ebf60d77b3abdd5cbaeaEmail:{EMAIL.}:{PHONE.}\n        Exp: java 2010-2023\n        skills: java\n        \n        \n        GROUND TRUTH EVIDENCE (Scraped Content): \n        No links provided.\n        "
+  },
+  {
+    "rank":8,
+    "battle_log":[
+      "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
+      "\u274c LOST to Rank #5 (0435c5): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\u2705 BEAT Rank #7 (c8cfcf): CANDIDATE_006099f8c13d59b6a55e9d162e703aa3 is the ...",
+      "\u2705 BEAT Rank #6 (8b7f71): CANDIDATE_006099f8c13d59b6a55e9d162e703aa3 is the ...",
+      "\ud83c\udfc5 Placed at Rank #6",
+      "\u274c LOST to Challenger (8fc5b5): CANDIDATE_8fc5b53c2f599ca5bb7fe1fc9faa3318 is the ...",
+      "\u274c LOST to Challenger (8d17a8): CANDIDATE_8d17a87cd654ebf60d77b3abdd5cbaea is the ..."
+    ],
+    "id":"006099f8c13d59b6a55e9d162e703aa3",
+    "safe_text":"\n        NAME: CANDIDATE_006099f8c13d59b6a55e9d162e703aa3\n        LOCATION: {LOCATION.}\n        CONTACT: {EMAIL.} | {PHONE.}\n        \n        SUMMARY:\n        Team Lead at Infosys with 8 years of Java\/Springboot experience.\n        Expert in banking domains.\n        \n        EXPERIENCE:\n        - Team Lead @ Infosys (2018-Present): Managing 20 devs.\n        \n        NOTICE PERIOD: 3 Months (Negotiable).\n        SKILLS: Java, Spring Boot, Oracle, Jenkins, SOAP API.\n        \n        \n        GROUND TRUTH EVIDENCE (Scraped Content): \n        No links provided.\n        "
+  },
+  {
+    "rank":9,
+    "battle_log":[
+      "\u2694\ufe0f  KILLED the Gatekeeper. Entering Ranking Phase...",
+      "\u274c LOST to Rank #5 (0435c5): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\u2705 BEAT Rank #7 (300b23): CANDIDATE_8b7f712e871e7d5f38d361f43d84deac is the ...",
+      "\u2705 BEAT Rank #6 (c8cfcf): CANDIDATE_8b7f712e871e7d5f38d361f43d84deac is the ...",
+      "\ud83c\udfc5 Placed at Rank #6",
+      "\u274c LOST to Challenger (006099): CANDIDATE_006099f8c13d59b6a55e9d162e703aa3 is the ...",
+      "\u274c LOST to Challenger (8fc5b5): CANDIDATE_8fc5b53c2f599ca5bb7fe1fc9faa3318 is the ..."
+    ],
+    "id":"8b7f712e871e7d5f38d361f43d84deac",
+    "safe_text":"\n        NAME: CANDIDATE_8b7f712e871e7d5f38d361f43d84deac\n        LOCATION: {LOCATION.}\n        CONTACT: {EMAIL.} | {PHONE.}\n        \n        SUMMARY:\n        Team Lead at Infosys with 8 years of Java\/Springboot experience.\n        Expert in banking domains.\n        \n        EXPERIENCE:\n        - Team Lead @ Infosys (2018-Present): Managing 20 devs.\n        \n        NOTICE PERIOD: 3 Months (Negotiable).\n        SKILLS: Java, Spring Boot, Oracle, Jenkins, SOAP API.\n        \n        \n        GROUND TRUTH EVIDENCE (Scraped Content): \n        No links provided.\n        "
+  },
+  {
+    "rank":10,
+    "battle_log":[
+      "\u274c LOST to Rank #5 (0435c5): CANDIDATE_0435c51cbed99559fcec8fd529c3da70 is the ...",
+      "\u2705 BEAT Rank #7 (01451f): CANDIDATE_c8cfcffe0d9ec54b83bb6ed6f4ab0eef is the ...",
+      "\u2705 BEAT Rank #6 (300b23): CANDIDATE_c8cfcffe0d9ec54b83bb6ed6f4ab0eef is the ...",
+      "\ud83c\udfc5 Placed at Rank #6",
+      "\u274c LOST to Challenger (8b7f71): CANDIDATE_8b7f712e871e7d5f38d361f43d84deac is the ...",
+      "\u274c LOST to Challenger (006099): CANDIDATE_006099f8c13d59b6a55e9d162e703aa3 is the ...",
+      "\ud83d\udee1\ufe0f DEFENDED spot against 273183",
+      "\ud83d\udee1\ufe0f DEFENDED spot against 535998",
+      "\ud83d\udee1\ufe0f DEFENDED spot against 71e3a8",
+      "\ud83d\udee1\ufe0f DEFENDED spot against 4dea14",
+      "\ud83d\udee1\ufe0f DEFENDED spot against 242827"
+    ],
+    "id":"c8cfcffe0d9ec54b83bb6ed6f4ab0eef",
+    "safe_text":"\n        NAME: CANDIDATE_c8cfcffe0d9ec54b83bb6ed6f4ab0eef\n        LOCATION: {LOCATION.}\n        CONTACT: {EMAIL.} | {PHONE.}\n        \n        SUMMARY:\n        Team Lead at Cognizant with 8 years of Java\/Springboot experience.\n        Expert in banking domains.\n        \n        EXPERIENCE:\n        - Team Lead @ Cognizant (2018-Present): Managing 20 devs.\n        \n        NOTICE PERIOD: 3 Months (Negotiable).\n        SKILLS: Java, Spring Boot, Oracle, Jenkins, SOAP API.\n        \n        \n        GROUND TRUTH EVIDENCE (Scraped Content): \n        No links provided.\n        "
   }
 ]

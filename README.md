@@ -1,199 +1,62 @@
-# 🏛️ The Colosseum: Agentic AI Recruitment Arbiter
+# 🏛️ The Colosseum Protocol
 
-**The Colosseum** is a locally-hosted, privacy-first AI recruitment system that turns a folder of raw PDFs into a ranked list of the Top 10 candidates.
+### *Autonomous Recruitment Audit & Ranking Architecture*
 
-Unlike standard ATS tools that rely on keyword matching, The Colosseum uses a **Tournament Architecture** with an LLM (Llama 3.3 70B) to perform head-to-head battles between candidates, ensuring that only the strongest survive.
+**The Colosseum** is an enterprise-grade AI pipeline designed to automate the recruitment "due diligence" process. Unlike standard resume parsers, Colosseum acts as a **Brutal Executive Auditor**: it strips away buzzwords, validates claims against live web evidence, anonymizes PII to remove bias, and ranks candidates using a rigorous "Tournament" system before generating executive-level dossiers.
+
+It operates on a **Hybrid Engine**, capable of switching seamlessly between Cloud (Gemini) for speed and Local (Llama-3/Ollama) for privacy/GDPR compliance.
 
 ---
 
-## ⚡ Key Features
+## ⚡ Core Capabilities
 
-* **🛡️ Privacy First:** All PII (Emails, Phones) is redacted locally *before* ever touching an AI API.
-* **⚔️ Colosseum Architecture:** Candidates are not just "scored"; they fight for rank. A **Binary Insertion Sort** algorithm places candidates in their exact competitive position.
-* **🧠 "Lazy" Intelligence (JIT):** We use **Just-In-Time (JIT) Scraping**. The system only scrapes a candidate's portfolio/GitHub links *if* they survive the initial "Gatekeeper" battle, saving massive amounts of time and API costs.
-* **🧟 Zombie Filter:** Automatically detects and quarantines "Zombie PDFs" (image-only scans) and corrupt files.
-* **🕸️ Persistent Memory:** Scraped evidence is cached. If you re-run the tournament, the system remembers the evidence it found last time.
+### 1. 🛡️ The "Euro-Local" Hybrid Engine
+
+* **Smart Switching:** Detects API keys to determine whether to use Cloud (Gemini 1.5) or Local (Llama-3) backends.
+* **Sandwich Context Strategy:** For local models with limited context (e.g., 4k tokens), it uses a "Sliding Window" technique to process massive resumes without forgetting instructions or output formats.
+* **Vision Rescue:** An "Oracle" module uses Vision LLMs to OCR and rescue image-based resumes from the quarantine folder.
+
+### 2. 🕵️ Deep-Dive Intelligence (The Masquerade)
+
+* **PII Anonymization:** Using a Split-Protocol, it extracts and masks Name, Phone, and Email (e.g., `CANDIDATE_4a2b`) *before* business logic is applied, ensuring unbiased analysis.
+* **Live Forensic Scraping:** The `FactChecker` module uses **Playwright** to visit candidate links (GitHub, Portfolios) and scrape "Ground Truth" evidence to verify resume claims against reality.
+* **Risk Audit:** Classifies candidates as **High/Medium/Low Risk** based on job hopping, notice period discrepancies, and timeline gaps.
+
+### 3. ⚔️ The Arena (Ranking & Tournament)
+
+* **Cross-Encoder Re-Ranking:** Uses MS-MARCO models to score candidates not just on keywords, but on semantic relevance to the "Battle Sheet".
+* **Binary Search Tournament:** Candidates fight 1v1 "battles" using LLM logic to find their exact insertion point in the ranking list, rather than arbitrary scoring.
+* **Deal-Breaker Sniper:** Automatically penalizes candidates missing mandatory certifications or specific "Must-Haves" (e.g., Notice Period > 60 Days).
+
+### 4. 🧪 Synthetic Stress Testing
+
+* **Chaos Generator:** Includes a `resume_gen.py` module that generates adversarial synthetic resumes ("Job Hoppers", "Corporate Traps" with 90-day notice periods, "Ghosts" with missing contact info) to validate the system's detection logic.
 
 ---
 
 ## 🛠️ Installation
 
-### 1. Prerequisites
+### Prerequisites
 
 * Python 3.10+
-* An [Gemini API Key](https://aistudio.google.com/).
+* [Ollama](https://ollama.com/) (For Local Mode)
+* [Playwright](https://playwright.dev/) (For Web Scraping)
 
-### 2. Setup
-
-Clone the repository and install dependencies:
+### Setup
 
 ```bash
-# 1. Create a virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# 1. Clone the repository
+git clone https://github.com/your-repo/colosseum.git
+cd colosseum
 
-# 2. Install requirements
+# 2. Install Dependencies
 pip install -r requirements.txt
-```
 
-### 3. Folder Structure
+# 3. Install Playwright Browsers (Required for 'Masquerade' Scraper)
+playwright install chromium
 
-Ensure your project looks like this:
-
-```text
-/project_root
-├── main.py                 # The Command Center
-├── requirements.txt        # Dependencies
-├── src/                    # The Logic Core
-│   ├── __init__.py
-│   ├── extractor.py
-│   ├── scout.py
-│   └── arbiter.py
-└── data/                   # The Data Warehouse
-    ├── resumes/            # PUT YOUR PDF RESUMES HERE
-    ├── prompts/            # (Auto-generated or manual text files)
-    └── job_data/
-        └── battle_sheet.json  # Your Criteria
-
-```
-
----
-
-## 🚀 How to Use
-
-The system is controlled via a unified CLI.
-
-**1. Prepare your Data:**
-
-* Drop your candidate PDFs into `data/resumes/`.
-* Edit `data/job_data/battle_sheet.json` to define your hiring criteria (see Configuration below).
-
-**2. Run the General:**
-
-```bash
-python main.py
-
-```
-
-**3. Choose Your Mission:**
-
-* **Option 1 (Full Pipeline):** Runs the entire process from PDF to Final Report.
-* **Option 4 (Arbiter Only):** Useful if you want to re-rank the existing Top 50 candidates without re-processing PDFs.
-
-**4. View Results:**
-
-* **Top 10 Report:** `data/result/FINAL_REPORT.csv`
-* **Full Data:** `data/result/candidates_final.parquet`
-
----
-
-## 🧠 System Architecture & Logic
-
-Why is the system built this way? Here is the logic behind the three phases.
-
-### Phase 1: The Smart Extractor (`src/extractor.py`)
-
-* **Logic:** **Content Hashing.**
-* *Problem:* Candidates often submit the same resume twice with different filenames (`resume_v1.pdf`, `resume_final.pdf`).
-* *Solution:* We generate an MD5 hash of the *file content*. If the hash exists, we skip it. This prevents "Split Brain" (ranking the same person twice).
-
-
-* **Logic:** **Markdown Conversion.**
-* We convert PDFs to **Markdown** (not plain text). This preserves headers and tables, helping the AI understand that "Python" listed under "Skills" is different from "Python" listed under "Hobby".
-
-
-
-### Phase 2: The Scout (`src/scout.py`)
-
-* **Logic:** **The 500  50 Filter.**
-* Running a 70B parameter LLM on 500 candidates is too expensive and slow.
-* *Solution:* We use **Vector Search** (Cosine Similarity) with a lightweight local model (`all-MiniLM-L6-v2`) to instantly find the Top 50 semantic matches.
-
-
-* **Logic:** **The Privacy Shield.**
-* Before sending data to the Arbiter (Cloud API), the Scout uses Regex + Neural Entity Recognition to redact Emails and Phone Numbers.
-
-
-
-### Phase 3: The Arbiter (`src/arbiter.py`)
-
-This is the core innovation. It uses a **Colosseum Tournament** structure.
-
-1. **The Arena:** A fixed list of size 10. Sorted from Rank #1 (God Tier) to Rank #10 (Gatekeeper).
-2. **The Challenger:** A new candidate enters the arena.
-3. **The Gatekeeper Battle:**
-* The Challenger fights the *weakest* person in the Arena (#10).
-* *Why?* If they can't beat #10, they are rejected immediately. We don't waste time comparing them to #1.
-
-
-4. **JIT (Just-In-Time) Fact Checking:**
-* We **do not scrape links** for all 50 candidates.
-* The scraper triggers *only* when a candidate enters a battle.
-* *Benefit:* We save ~80% of scraping time/risk by ignoring the "trash" candidates who never make it to the Arena.
-
-
-5. **Binary Insertion Sort:**
-* If a Challenger beats #10, they are in. But where?
-* Instead of fighting #9, then #8, then #7 (slow), we use **Binary Search**.
-* The Challenger fights the **Middle** (#5). If they win, they fight #2. If they lose, they fight #7.
-* *Benefit:* Finds the exact rank in ~3 API calls instead of 10.
-
-
-
----
-You are absolutely right. I missed listing the **most important prompt**—the one that extracts the candidate's Name and Experience while they fight their first battle.
-
-Without this, your final report would have blank columns for `Name` and `YOE`.
-
-Here is the missing file and the updated README section.
-
-### **1. The Missing File: `data/prompts/judge_newcomer.txt**`
-
-Create this file. This is the "Dual-Task" prompt: it judges the winner **AND** extracts metadata (Name, YOE, Role) simultaneously to save tokens.
-
-```text
-You are the Arbiter.
-Your goal is to compare two candidates AND extract their missing metadata.
-
-=== THE BATTLE SHEET (CRITERIA) ===
-Role: {{role}}
-Must Haves: {{must_haves}}
-Deal Breakers: {{deal_breakers}}
-
-=== CANDIDATE A (Challenger) ===
-ID: {{id_a}}
-Resume & Evidence:
-{{text_a}}
-
-=== CANDIDATE B (Opponent) ===
-ID: {{id_b}}
-Resume & Evidence:
-{{text_b}}
-
-=== INSTRUCTIONS ===
-1. Analyze both dossiers.
-2. EXTRACT the following for BOTH candidates (Infer from text if not explicit):
-   - "name": Full Name (e.g. "Jane Doe")
-   - "yoe": Years of Experience (Numeric integer, e.g. 5)
-   - "current_role": Most recent job title.
-3. DECIDE: Who is the stronger candidate for this specific role?
-4. REASON: Why did they win? (Be specific: "A has deployed to AWS, B has not").
-
-=== OUTPUT FORMAT (STRICT JSON) ===
-{
-    "candidate_a_details": {
-        "name": "Extracted Name",
-        "yoe": 5,
-        "current_role": "Title"
-    },
-    "candidate_b_details": {
-        "name": "Extracted Name",
-        "yoe": 3,
-        "current_role": "Title"
-    },
-    "winner_id": "{{id_a}}",
-    "reason": "One sentence explaining the victory."
-}
+# 4. (Optional) Pull Local Model for Privacy Mode
+ollama pull llama3
 
 ```
 
@@ -201,37 +64,131 @@ Resume & Evidence:
 
 ## ⚙️ Configuration
 
-### The Prompts
+### 1. The Battle Sheet
 
-You can tweak the AI's personality by editing the text files in `data/prompts/`. The system uses a **3-Tier Prompt Strategy** to optimize for cost and accuracy:
+Define your target role in `data/job_data/battle_sheet.json`. This controls the AI's judgment criteria.
 
-* **`judge_newcomer.txt` (The Investigator):**
-* *Trigger:* Used in a candidate's very first battle.
-* *Goal:* Compares candidates **AND** extracts their Name, Years of Experience, and Current Role. This ensures we don't pay for a separate extraction API call.
+```json
+{
+  "role": "Senior Backend Engineer",
+  "must_haves": ["Rust", "Kubernetes", "English C1"],
+  "deal_breakers": ["No remote experience", "Notice period > 60 days"],
+  "cultural_vibe": "Fast-paced, chaotic, ownership-heavy",
+  "keywords_for_scan": ["Kafka", "Redis", "System Design"]
+}
 
+```
 
-* **`judge_gatekeeper.txt` (The Bouncer):**
-* *Trigger:* Used when the Arena is full (10/10).
-* *Goal:* A fast, ruthless "Yes/No" check. If the Challenger has a deal-breaker (e.g., dead link), they are rejected immediately.
+### 2. Environment
 
+Create a `.env` file (Optional). If skipped, the system defaults to **Local Mode**.
 
-* **`judge_ranker.txt` (The Judge):**
-* *Trigger:* Used during the Binary Search inside the Top 10.
-* *Goal:* A deep, nuanced comparison to determine exact ranking (e.g., Rank #4 vs Rank #5).
+```ini
+GEMINI_API_KEY=AIzaSy... 
+
+```
+
+---
+
+## 🚀 Execution Workflow
+
+The system is controlled via the **Agency Control Tower** (`main.py`).
+
+```bash
+python main.py
+
+```
+
+This launches an interactive CLI menu to guide you through the 9-Phase Pipeline:
+
+### 📥 Phase 1: Ingestion
+
+* **Option 1 (Extractor):** Hashes and extracts text from PDFs/DOCX. Deduplicates by content MD5.
+* **Option 2 (Oracle):** Rescues corrupt or image-based PDFs using Vision LLMs.
+
+### 🧠 Phase 2: Intelligence
+
+* **Option 3 (Scout):** Vector-based filtering (MiniLM) to reduce the pool size.
+* **Option 4 (Re-Ranker):** Semantic Cross-Encoder scoring to bubble up the best matches.
+* **Option 5 (Masquerade):** The heavy lifting. Masks PII, scrapes web evidence, and performs the initial Risk Audit.
+
+### ⚔️ Phase 3: The Tournament
+
+* **Option 6 (Colosseum):** Candidates fight for rank using Binary Search battles. High-risk candidates are purged.
+* **Option 7 (Auditor):** Writes the final "Investment Memo" for the winners.
+
+### 📤 Phase 4: Publication
+
+* **Option 8 (Lite Export):** Generates a CSV Data Pack.
+* **Option 9 (Designer):** Generates the final PDF Dossier.
+
+---
+
+## 🛠️ Developer Utilities
+
+The project includes root-level tools for testing and debugging:
+
+### `resume_gen.py` (Chaos Monkey)
+
+Generates synthetic resumes to stress-test the Auditor's risk detection.
+
+```bash
+python resume_gen.py
+
+```
+
+* **Creates:** "Alphas" (Perfect candidates), "Traps" (Good skills, 90-day notice), "Hoppers" (Job hoppers), and "Ghosts" (No contact info).
+
+### `peek_data.py` (Data Inspector)
+
+Allows you to inspect the binary Parquet databases directly in the terminal without needing a data viewer.
+
+```bash
+python peek_data.py
+
+```
+
+* **Displays:** The first 5 rows of `candidates_reranked.parquet` with rich formatting.
+
+---
+
+## 📂 Project Structure
+
+```text
+colosseum/
+├── main.py               # 🎛️ The Control Tower (CLI Entry Point)
+├── resume_gen.py         # 🧪 Synthetic Data Generator
+├── peek_data.py          # 🧐 Parquet Data Inspector
+├── requirements.txt      # 📦 Dependency List
+├── data/
+│   ├── resumes/          # Raw Input
+│   ├── quarantine/       # Corrupt/Image files (Rescued by Oracle)
+│   └── result/           # Parquet DBs, JSON Reports, Final PDFs
+└── src/
+    ├── engine.py         # Cloud Engine (Gemini)
+    ├── backup_engine.py  # Local Engine (Llama-3 Sandwich Logic)
+    ├── extractor.py      # Hash-based Ingestion & OCR
+    ├── oracle.py         # Vision LLM Rescue for images
+    ├── scout.py          # Vector Search & Density Audit
+    ├── reranker.py       # Cross-Encoder & Deal-Breaker Logic
+    ├── masquerade.py     # PII Masking, Web Scraping, Risk Audit
+    ├── auditor.py        # Narrative Generation
+    ├── designer.py       # PDF Generator
+    └── datapack.py       # CSV Generator
+
+```
+
+---
+
+## ⚠️ Security & Privacy
+
+* **GDPR Compliance:** When no API key is provided, the system runs entirely on `localhost` using Ollama. No candidate data leaves the machine.
+* **Bias Mitigation:** The **Masquerade** module uses a strict "Split Protocol":
+1. **Op A (PII Scout):** Extracts & Masks Identity.
+2. **Op B (Analyst):** Analyzes *only* the masked text for skills/risk.
 
 
 
 ---
 
-### **3. Code Verification (Logic Check)**
-
-Just to confirm, your `src/arbiter.py` **already has the logic** to handle this. Look at `_battle()`:
-
-```python
-        # 5. Extraction Logic (Only for 'newcomer')
-        if mode == "newcomer":
-            # Save extracted metadata to DF
-            for key in ['candidate_a_details', 'candidate_b_details']:
-                # ... (Logic to save Name/YOE to dataframe) ...
-
-```
+> *"Treats every hire as a high-stakes capital allocation."* — **The Colosseum Protocol**

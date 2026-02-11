@@ -23,7 +23,7 @@ def peek_parquet():
 
     # Add Rows (Sample Data)
     for _, row in df.iterrows():
-        table.add_row(*[str(val)[:5] for val in row.values])
+        table.add_row(*[str(val)[:1000] for val in row.values])
 
     console.print(table)
     

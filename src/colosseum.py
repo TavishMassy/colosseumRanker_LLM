@@ -1,14 +1,8 @@
 import os
-import time
 import json
-import random
-import requests
 import pandas as pd
-import numpy as np
 from pathlib import Path
-from bs4 import BeautifulSoup
 from rich.progress import Progress
-from playwright.sync_api import sync_playwright
 
 # Import the Engine
 from src.engine import Engine
@@ -18,43 +12,8 @@ DATA_DIR = Path("data")
 PROMPTS_DIR = DATA_DIR / "prompts"
 RESULT_DIR = DATA_DIR / "result"
 
-# For jr/mid level roles and 5000 for senior ones
-RESUME_SIZE = 3000
-
-class FactChecker:
-    def __init__(self) -> None:
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-        }
-
-    def scrape_text(self, url) -> str:
-        """Launches a browser to extract visible text from a website."""
-        # Skip social media - anti-scraping is too high and text isn't useful for 'evidence'
-        if any(domain in url.lower() for domain in ["linkedin.com", "twitter.com", "facebook.com"]):
-            return f"Social Profile Verified: {url}"
-
-        try:
-            with sync_playwright() as p:
-                # Use a real browser to handle React/Vue/Next.js portfolios
-                browser = p.chromium.launch(headless=True)
-                page = browser.new_page()
-                
-                # Navigate and wait until the network is quiet (10s timeout)
-                page.goto(url, wait_until="networkidle", timeout=10000)
-                
-                # Extract text from the body to avoid <script> and <style> tags
-                raw_text = page.inner_text("body")
-                
-                # Clean up whitespace and limit length to avoid 'Token Bloat' in the AI
-                clean_text = " ".join(raw_text.split())
-                browser.close()
-                
-                return f"SCRAPED CONTENT: {clean_text[:1500]}..." # First 1500 chars is plenty
-        except Exception as e:
-            return f"Scrape Failed ({str(e)[:30]})"
-
 class Colosseum:
-    def __init__(self, candidates_df, battle_sheet) -> None:
+    def __init__(self, candidates_df, battle_sheet, RESUME_LEN) -> None:
         self.df = candidates_df.copy()
 
         if (RESULT_DIR / "candidates_processed.parquet").exists():            
@@ -63,7 +22,8 @@ class Colosseum:
             self.df_processed = None
 
         self.sheet = battle_sheet
-        self.investigator = FactChecker()
+
+        self.len = RESUME_LEN
         
         # Initialize the Engine
         self.engine = Engine()
@@ -88,70 +48,6 @@ class Colosseum:
         with open(path, 'r') as f:
             return f.read()
 
-    def _ensure_evidence(self, candidate_id) -> None:
-        # 1. Prevent KeyError: Check if column exists, create if not
-        if 'evidence' not in self.df.columns:
-            self.df['evidence'] = ""
-
-        idx_list = self.df.index[self.df['id'] == candidate_id].tolist()
-        if not idx_list: return
-        idx = idx_list[0]
-
-        # 2. Skip if already processed
-        current_val = self.df.at[idx, 'evidence']
-        if pd.notna(current_val) and current_val != "":
-            return
-
-        links = []
-
-        if 'links' in self.df.columns:
-            val = self.df.at[idx, 'links']
-            
-            # Handle actual lists (if pandas kept the type)
-            if isinstance(val, (list, tuple, np.ndarray)): 
-                links = list(val)
-            # Handle stringified lists from Parquet
-            elif isinstance(val, str) and val.strip() not in ["", "N/A", "[]"]:
-                # Robust cleaning: remove brackets, then split, then strip quotes/spaces
-                clean_val = val.strip("[]")
-                links = [l.strip().strip("'\"") for l in clean_val.split(",") if l.strip()]
-
-        if not links:
-            self.df.at[idx, 'evidence'] = "No links provided."
-            return
-
-        # 4. Extract links (handling both list and numpy/pandas series)
-        raw_links = links
-        if isinstance(raw_links, (list, tuple)):
-            links = list(raw_links)
-        elif hasattr(raw_links, 'tolist'): # Handle numpy/pandas types
-            links = raw_links.tolist()
-        else:
-            links = []
-
-        if not links:
-            self.df.at[idx, 'evidence'] = "No links provided."
-            return
-
-        # 5. Link Scraping Pass
-        print(f"   🔎 {candidate_id[:6]}: Deep-scanning portfolio content...")
-        evidence_list = []
-        
-        for link in links:
-            if not isinstance(link, str) or not link.startswith('http'):
-                continue
-            
-            # CALL THE NEW SCRAPER
-            content = self.investigator.scrape_text(link)
-            evidence_list.append(f"SOURCE [{link}]: {content}")
-            
-        if evidence_list:
-            self.df.at[idx, 'evidence'] = " | ".join(evidence_list)
-        else:
-            self.df.at[idx, 'evidence'] = "No valid portfolio data found."
-            
-        print(f"   ✅ Evidence Logged.")
-
     def purge_high_risk(self):
         """Disqualifies candidates flagged as High Risk by the Auditor."""
         print(f"🛡️  Security Sweep: Auditing candidate risk levels...")
@@ -163,36 +59,37 @@ class Colosseum:
         
         for idx, row in self.df.iterrows():
             meta = {}
+            # 1. Safe Metadata Parsing
             if 'metadata' in row and pd.notna(row['metadata']):
                 try:
-                    meta = json.loads(row['metadata'])
+                    meta = json.loads(row['metadata']) if isinstance(row['metadata'], str) else row['metadata']
                 except:
-                    pass
+                    meta = {}
             
-            # 🚨 DISQUALIFICATION TRIGGER
-            if meta.get('risk') == "High":
-                reason = meta.get('reason', 'Flagged by security audit')
+            # 2. 🚨 CORRECTED TRIGGER (Drill into risk_audit -> level)
+            risk_data = meta.get('risk_audit', {})
+            risk_level = risk_data.get('level', 'Low')
+            
+            if risk_level == "High":
+                reason = risk_data.get('reason', 'Flagged by security audit')
+                
+                # Log and Ban
                 self._log_event(row['id'], f"🚫 DISQUALIFIED: {reason}")
-                # Move them to a rank that is impossible to reach (e.g., 999)
                 self.df.at[idx, 'rank'] = 999 
                 disqualified_count += 1
         
-        # Remove them from the active queue for the run_tournament loop
+        # 3. Purge
         self.df = self.df[self.df['rank'] != 999].reset_index(drop=True)
         print(f"✅ Sweep Complete: {disqualified_count} high-risk candidates removed.")
 
     def _get_dossier(self, candidate_id) -> str:
-        self._ensure_evidence(candidate_id)
         row = self.df.loc[self.df['id'] == candidate_id].iloc[0]
         
         # We add a clear "TRUTH" label to the evidence so the AI knows it's the anchor
         dossier = f"""
         ID: {row['id']}
         CANDIDATE CLAIMS (Resume): 
-        {row['safe_text'][:RESUME_SIZE]}
-        
-        GROUND TRUTH EVIDENCE (Scraped Content): 
-        {row['evidence']}
+        {row['safe_text'][:self.len]}...
         """
         return dossier
 

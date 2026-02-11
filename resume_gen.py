@@ -1,195 +1,124 @@
 import os
 import random
-import json
-import string
 from pathlib import Path
 
 # --- CONFIG ---
 RAW_DATA_DIR = Path("data/resumes")
 RAW_DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-# Real-ish links to test the Scraper
-REAL_PORTFOLIOS = [
-    "https://brittanychiang.com/",
-    "https://bruno-simon.com/", 
-    "https://matthewfarley.ca/",
-    "https://tamalsen.dev/",
-    "https://www.jenniferdewalt.com/",
-    "https://leerob.io/",
-    "https://overreacted.io/",
-    "https://github.com/torvalds",
-    "https://stackoverflow.com/users/1",
-    "https://news.ycombinator.com/"
-]
-
-FAKE_BLOGS = [
-    "https://medium.com/@fake_dev_123/how-i-learned-react-in-1-day",
-    "https://dev.to/wannabe_coder/why-html-is-a-programming-language",
-    "https://zapier.com/blog/case-study-examples/", # The Trap Link
-    "http://localhost:3000", # Broken Link
-    "https://linkedin.com/in/fake-profile-999" # Social Link (Should be skipped by Scraper)
-]
-
-SKILL_SETS = {
-    "Web": ["React", "Node.js", "TypeScript", "Next.js", "Tailwind", "GraphQL", "PostgreSQL"],
-    "Systems": ["Rust", "C++", "Go", "Linux", "Kernel", "Embedded", "Assembly"],
-    "AI": ["Python", "PyTorch", "TensorFlow", "CUDA", "LLM", "RAG", "LangChain"],
-    "Buzzword": ["Synergy", "Blockchain", "Web3", "Metaverse", "NFT", "Growth Hacking", "Disruption"]
+# Test Data Pools
+REAL_PORTFOLIOS = ["https://github.com/torvalds", "https://leerob.io", "https://bruno-simon.com"]
+CITIES = ["Jaipur", "Bangalore", "Mumbai", "Remote", "New York", "London"]
+COMPANIES = {
+    "Product": ["Google", "Uber", "Zomato", "Cred", "Stripe"],
+    "Service": ["TCS", "Infosys", "Wipro", "Accenture", "Cognizant"]
 }
 
-def get_random_contact(name):
-    domain = random.choice(["gmail.com", "outlook.com", "protonmail.com", "dev-hub.io", "tech-corp.net"])
-    clean_name = name.lower().replace(" ", ".")
-    email = f"{clean_name}.{random.randint(10, 99)}@{domain}"
-    phone = f"+{random.randint(1, 99)} {random.randint(200, 999)}-{random.randint(100, 999)}-{random.randint(1000, 9999)}"
-    return email, phone
-
-def generate_bio(role, years, skills):
-    intros = [
-        f"Highly motivated {role} with {years} years of experience.",
-        f"Passionate {role} specializing in scalable architecture.",
-        f"Results-driven professional with a track record in {skills[0]} and {skills[1]}.",
-        f"I am a {role} who loves building things that break things.",
-        f"Visionary leader transforming the {role} landscape."
-    ]
-    
-    body = [
-        f"Successfully led a team of {random.randint(3, 15)} engineers to deploy critical infrastructure.",
-        f"Reduced latency by {random.randint(10, 80)}% using advanced {skills[random.randint(0, len(skills)-1)]} techniques.",
-        f"Managed a budget of ${random.randint(50, 500)}k for cloud migration projects.",
-        f"Authored multiple libraries in {skills[1]} downloaded over {random.randint(1000, 1000000)} times.",
-        f"Speaker at {random.choice(['PyCon', 'ReactConf', 'KubeCon', 'Local Meetup'])} 2024.",
-        f"Implemented a {skills[2]} pipeline that saved the company {random.randint(100, 500)} hours annually."
-    ]
-    
-    return f"{random.choice(intros)}\n\nPROFESSIONAL SUMMARY:\n" + "\n".join(random.sample(body, 3))
+def get_contact(name):
+    clean = name.lower().replace(" ", ".")
+    return f"{clean}@{random.choice(['gmail.com', 'outlook.com'])}", f"+91-98{random.randint(10000000, 99999999)}"
 
 def generate_sophisticated_chaos():
     resumes = []
     
-    # 1. THE "PERFECT" CANDIDATES (Top 5 - High Skill, Good Links)
+    # 1. THE "UNICORN" (Alpha) - Immediate Joiner, Product Co, Right Location
+    # EXPECTATION: Rank #1, Low Risk, Notice: "Immediate"
     for i in range(5):
         name = f"Alpha Candidate {i}"
-        email, phone = get_random_contact(name)
-        skills = SKILL_SETS["Systems"] + SKILL_SETS["AI"]
-        links = random.sample(REAL_PORTFOLIOS, 2)
+        email, phone = get_contact(name)
+        skills = "Rust, Go, Kubernetes, AWS, Kafka, Microservices"
         
         content = f"""
         NAME: {name}
+        LOCATION: Jaipur, India
         CONTACT: {email} | {phone}
-        ROLE: Senior Systems Architect
-        LINKS: {', '.join(links)}
+        LINKS: {random.choice(REAL_PORTFOLIOS)}
         
-        {generate_bio('Systems Architect', random.randint(8, 15), skills)}
-        
-        TECHNICAL ARSENAL: {', '.join(skills)}
+        SUMMARY:
+        Staff Engineer at {random.choice(COMPANIES['Product'])} handling 1M+ RPS.
+        Currently serving notice period (Last working day: Next Friday).
         
         EXPERIENCE:
-        - Principal Engineer at TechCorp (2018-Present): Led the migration from monolith to microservices using {skills[0]}.
-        - Senior Dev at StartupX (2014-2018): Scaled user base to 1M+ using {skills[1]} and {skills[2]}.
+        - Staff Engineer @ {random.choice(COMPANIES['Product'])} (2020-Present): Scaled payments engine.
+        - Senior Dev @ Swiggy (2016-2020): Built logistics layer.
+        
+        NOTICE PERIOD: Serving Notice (10 Days remaining).
+        SKILLS: {skills}
         """
         resumes.append({"type": "Alpha", "name": name.replace(" ", "_"), "content": content})
 
-    # 2. THE "BUZZWORD" BOTS (Top 10 - High Keyword Density, Trash Links)
-    for i in range(10):
-        name = f"Buzzword Bot {i}"
-        email, phone = get_random_contact(name)
-        skills = SKILL_SETS["Buzzword"] + SKILL_SETS["Web"]
-        links = [random.choice(FAKE_BLOGS), "https://zapier.com/blog/case-study-examples/"]
+    # 2. THE "CORPORATE TRAP" - Good Skills, but 90 Day Notice
+    # EXPECTATION: Good Rank, but Flagged for "90 Days Notice"
+    for i in range(5):
+        name = f"Corporate Dev {i}"
+        email, phone = get_contact(name)
+        company = random.choice(COMPANIES['Service'])
+        
+        content = f"""
+        NAME: {name}
+        LOCATION: Bangalore
+        CONTACT: {email} | {phone}
+        
+        SUMMARY:
+        Team Lead at {company} with 8 years of Java/Springboot experience.
+        Expert in banking domains.
+        
+        EXPERIENCE:
+        - Team Lead @ {company} (2018-Present): Managing 20 devs.
+        
+        NOTICE PERIOD: 3 Months (Negotiable).
+        SKILLS: Java, Spring Boot, Oracle, Jenkins, SOAP API.
+        """
+        resumes.append({"type": "Trap", "name": name.replace(" ", "_"), "content": content})
+
+    # 3. THE "JOB HOPPER" - Great Skills, but leaves every 6 months
+    # EXPECTATION: High Risk Audit -> "Job Hopper" flag
+    for i in range(5):
+        name = f"Hopper {i}"
+        email, phone = get_contact(name)
         
         content = f"""
         NAME: {name}
         CONTACT: {email} | {phone}
-        ROLE: Visionary Tech Ninja
-        LINKS: {', '.join(links)}
         
         SUMMARY:
-        I leverage synergistic paradigms to disrupt the blockchain metaverse. utilizing {skills[0]} and {skills[1]} to drive growth hacking KPIs.
-        
-        SKILLS: {', '.join(skills)}
+        Fast-paced developer looking for new challenges.
         
         EXPERIENCE:
-        - CEO of Self (2020-Present): Thought leadership in {skills[2]}.
-        - Consultant (2019-2020): Ideated NFT solutions for {skills[3]}.
+        - Dev @ Startup A (Jan 2024 - Present)
+        - Dev @ Crypto B (June 2023 - Dec 2023)
+        - Dev @ AI Corp (Jan 2023 - May 2023)
+        - Intern @ Web Shop (Aug 2022 - Dec 2022)
+        
+        SKILLS: React, Node.js, Web3, Solidity.
+        NOTICE: Immediate.
         """
-        resumes.append({"type": "Bot", "name": name.replace(" ", "_"), "content": content})
+        resumes.append({"type": "Hopper", "name": name.replace(" ", "_"), "content": content})
 
-    # 3. THE "JUNIOR" DEVS (Top 15 - Good intent, Low Exp, Mixed Links)
-    for i in range(15):
-        name = f"Junior Dev {i}"
-        email, phone = get_random_contact(name)
-        skills = SKILL_SETS["Web"]
-        links = [random.choice(REAL_PORTFOLIOS)]
-        
-        content = f"""
-        NAME: {name}
-        PHONE: {phone}
-        EMAIL: {email}
-        ROLE: Junior Web Developer
-        PORTFOLIO: {links[0]}
-        
-        OBJECTIVE: Eager to learn and grow as a {skills[0]} developer.
-        
-        PROJECTS:
-        - ToDo App: Built with {skills[1]} and {skills[2]}.
-        - Weather App: Used {skills[3]} API.
-        
-        EDUCATION:
-        - Bootcamp Grad 2023
-        """
-        resumes.append({"type": "Junior", "name": name.replace(" ", "_"), "content": content})
-
-    # 4. THE "DATA POISON" (Top 5 - Valid Text, Wrong Role)
-    for i in range(5):
-        name = f"Chef Gordon {i}"
-        email, phone = get_random_contact(name)
-        links = ["https://www.foodnetwork.com/"]
-        
-        content = f"""
-        NAME: {name}
-        CONTACT: {email}
-        PHONE: {phone}
-        ROLE: Executive Chef
-        WEBSITE: {links[0]}
-        
-        SUMMARY:
-        Expert in French Cuisine and Kitchen Management. I handle high-pressure environments (Dinner Service).
-        Looking to pivot to Tech because I heard it pays well.
-        
-        SKILLS: Knife Skills, Sauce Making, Inventory Management, HACCP.
-        """
-        resumes.append({"type": "Noise", "name": name.replace(" ", "_"), "content": content})
-
-    # 5. THE "GHOSTS" (Top 5 - No Contact Info, Great Skills)
-    for i in range(5):
+    # 4. THE "GHOST" (No Contact)
+    # EXPECTATION: Filtered out by Auditor or Ghostbuster
+    for i in range(3):
         name = f"Ghost Protocol {i}"
-        skills = SKILL_SETS["Systems"]
-        
         content = f"""
         NAME: {name}
-        ROLE: Elite Hacker
-        
-        {generate_bio('Security Researcher', 10, skills)}
-        
-        SKILLS: {', '.join(skills)}
-        NOTE: I do not provide contact info. Find me if you can.
+        ROLE: Senior Architect
+        SKILLS: Python, AI, ML, Data Science.
+        EXPERIENCE: 10 Years at Google.
+        NOTE: Contact me on LinkedIn (Link not provided).
         """
         resumes.append({"type": "Ghost", "name": name.replace(" ", "_"), "content": content})
 
-    # 6. THE "BROKEN" FILES (Top 10 - Malformed Format)
-    for i in range(10):
+    # 5. THE "GLITCH" (Malformed)
+    # EXPECTATION: Low Score or "Insufficient Data" verdict
+    for i in range(3):
         name = f"Glitch User {i}"
-        email, phone = get_random_contact(name)
-        
+        email, phone = get_contact(name)
         content = f"""
         Name:{name}Email:{email}Phone:{phone}
-        
-        Experience:2010-2015 worked at google doing java 2015-2020 worked at facebook doing python
-        skills:java python c++
-        
-        links: http://broken-link.com
+        Exp: java 2010-2023
+        skills: java
         """
-        resumes.append({"type": "Broken", "name": name.replace(" ", "_"), "content": content})
+        resumes.append({"type": "Glitch", "name": name.replace(" ", "_"), "content": content})
 
     return resumes
 
@@ -199,7 +128,7 @@ def run():
         f.unlink()
         
     all_data = generate_sophisticated_chaos()
-    print(f"🚀 Deploying {len(all_data)} Heavy-Duty Resumes to {RAW_DATA_DIR}...")
+    print(f"🚀 Deploying {len(all_data)} Recruitment Scenarios...")
     
     for i, entry in enumerate(all_data):
         filename = RAW_DATA_DIR / f"{entry['type']}_{i:03d}_{entry['name']}.txt"
@@ -207,14 +136,12 @@ def run():
             f.write(entry['content'])
             
     print(f"✅ Created {len(all_data)} files.")
-    print("📊 Distribution:")
-    print("   - Alpha (Perfect): 5")
-    print("   - Bot (Buzzwords): 10")
-    print("   - Junior (Weak): 15")
-    print("   - Noise (Wrong Role): 5")
-    print("   - Ghost (No Contact): 5")
-    print("   - Broken (Bad Format): 10")
-    print("\n🚦 Ready for Phase 1 (Extractor).")
+    print("📊 Scenarios:")
+    print("   - Alpha (Immediate/Product): 5")
+    print("   - Trap (90 Day Notice): 5")
+    print("   - Hopper (Frequent Switches): 5")
+    print("   - Ghost (No Contact): 3")
+    print("   - Glitch (Bad Format): 3")
 
 if __name__ == "__main__":
     run()

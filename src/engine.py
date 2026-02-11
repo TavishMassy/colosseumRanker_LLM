@@ -8,7 +8,6 @@ import threading
 from pathlib import Path
 from google import genai
 from google.genai import types
-from concurrent.futures import ThreadPoolExecutor, TimeoutError
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.backup_engine import LocalEngine 
@@ -77,12 +76,12 @@ class Engine:
             self.usage['total_tokens'] += tokens
             self._save_usage(self.usage)
 
-    def think(self, prompt_text):
+    def think(self, prompt_text, is_local_run = False):
         if self.usage['total_tokens'] >= TOKEN_LIMIT:
             print(f"   🛑 [System] Token Limit Reached ({TOKEN_LIMIT}). Switching to Local Backup.")
             return self.backup.think(prompt_text)
 
-        if not self.is_cloud_alive:
+        if not self.is_cloud_alive or is_local_run:
             return self.backup.think(prompt_text)
 
         for attempt in range(2):

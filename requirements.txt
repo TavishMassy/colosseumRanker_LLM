@@ -19,13 +19,11 @@ torch
 
 # --- AI Engines (Cloud) ---
 google-genai
-python-dotenv
 
 # --- Web & Networking ---
 requests
 beautifulsoup4
 urlextract
-phonenumbers
 playwright
 
 # --- UI & Utilities ---

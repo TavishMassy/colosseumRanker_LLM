@@ -132,7 +132,7 @@ def run_oracle_rescue():
                     txt_file.write(result.get("raw_text"))
                                 
                 rescued_candidates.append({
-                    "id": ResumeExtractor.get_hash(txt_file),
+                    "id": ResumeExtractor.get_hash(txt_path),
                     "file_name": f_original.name,
                     "file_type": f_original.suffix.lower(),
                     "extraction_method": "VLM",

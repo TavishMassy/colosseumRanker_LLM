@@ -1,7 +1,6 @@
 import json
 import pandas as pd
 from pathlib import Path
-from rich.progress import track
 from sentence_transformers import CrossEncoder
 import re
 

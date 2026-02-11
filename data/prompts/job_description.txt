@@ -15,6 +15,13 @@ You are an Expert Recruitment Architect. I will give you a raw Job Description a
 - "deal_breakers": A list of "Anti-Persona" traits (e.g., "Job Hopper", "No Portfolio", "Lack of relevant degree" if applicable).
 - "cultural_vibe": A short description of the company culture inferred from the text.
 
+- "risk_standards": A dictionary defining the audit criteria CUSTOMIZED for this specific JD.
+    {
+        "Low": "Define the 'Perfect Safe Hire' traits (e.g., 'Immediate Joiner', 'Ex-FAANG').",
+        "Medium": "Define tolerable friction (e.g., 'Notice Period 30-60 days', 'Slight Skill Gap').",
+        "High": "Define specific deal-breakers for THIS role (e.g., 'No Portfolio' for Designers, 'Anonymous', 'Notice > 90 days')."
+    }
+
 **Input Data:**
 ---
 **Company Name:** [INSERT COMPANY NAME HERE]
