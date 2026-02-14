@@ -85,7 +85,7 @@ class Colosseum:
     def _get_dossier(self, candidate_id) -> str:
         row = self.df.loc[self.df['id'] == candidate_id].iloc[0]
         
-        # We add a clear "TRUTH" label to the evidence so the AI knows it's the anchor
+        # Adds a clear "TRUTH" label to the evidence so the AI knows it's the anchor
         dossier = f"""
         ID: {row['id']}
         CANDIDATE CLAIMS (Resume): 
@@ -243,7 +243,7 @@ class Colosseum:
         rank_map = {cid: i for i, cid in enumerate(ranked_list, 1)}
 
         # 2. Apply the map to the DataFrame using 'Rank' (Capitalized)
-        # We use fillna(999) for candidates who didn't make the top tier
+        # Uses fillna(999) for candidates who didn't make the top tier
         self.df['Rank'] = self.df['id'].map(rank_map).fillna(999).astype(int)
 
         # 3. Handle ranks for remaining candidates (outside winners_circle)

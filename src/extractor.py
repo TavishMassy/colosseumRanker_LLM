@@ -10,7 +10,7 @@ from rich.progress import track
 
 class ResumeExtractor:
     def __init__(self) -> None:
-        # We focus on these 3 formats.
+        # Focuses on these 3 formats.
         self.supported = {'.pdf', '.docx', '.txt'}
 
     def get_hash(self, file_path) -> str:

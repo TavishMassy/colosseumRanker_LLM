@@ -62,7 +62,7 @@ class ReRanker:
         # 1. DYNAMIC 'MUST-HAVE' ASSASSINATION
         # This takes whatever the JSON says is mandatory (e.g., ServSafe)
         for requirement in must_haves:
-            # We normalize the requirement into a searchable keyword
+            # Normalizes the requirement into a searchable keyword
             # e.g., "ServSafe or State-level Certification" -> ["servsafe", "certification"]
             req_keywords = self._extract_keywords([requirement])
             

@@ -28,7 +28,8 @@ SHEET_PATH = DATA_DIR / "job_data" / "battle_sheet.json"
 MAX_TOURNAMENT_SIZE = 50
 WINNERS_CIRCLE = 10
 TAKE_RISK = False
-RESUME_LEN = 3000 # For jr/mid level roles and 5000 for senior ones
+PRIVACY_MODE = False
+RESUME_LEN = 3000 # 3000 for jr/mid level roles and 5000 for senior ones
 
 # Ensure directories exist
 for d in [DATA_DIR, RAW_DIR, RESULT_DIR]:
@@ -129,7 +130,7 @@ class AgencyControl:
         df = pd.read_parquet(input_path)
         scouted_count = len(df)
         
-        # We take the smaller of: (10% of candidates) OR (Max 20)
+        # Takes the smaller of: (10% of candidates) OR (Max Tournament Size)
         # But we ensure we have at least 10 people to fight.
         # Logic: min(20, max(10, 10%))
         
@@ -153,7 +154,7 @@ class AgencyControl:
         reranked_file = self.result_dir / "candidates_reranked.parquet"
         df = pd.read_parquet(reranked_file)
         console.print(Panel("[bold yellow]Phase 5: 🎭 Masquerade Protocol (Blind Hiring)[/bold yellow]", border_style="yellow"))
-        masquerade = Masquerade(df, RESUME_LEN)
+        masquerade = Masquerade(df, RESUME_LEN, PRIVACY_MODE)
         masquerade.mask_candidates() 
                
     def run_colosseum(self):
@@ -192,6 +193,7 @@ class AgencyControl:
 
     def export_lite_results(self):
         """Phase 8: Generating Professional Data Pack (CSV)."""
+        console.print(Panel("[bold blue]Phase 8: Generating Master Executive Data Pack[/bold blue]", border_style="blue"))
         # Call the new robust module
         generator = DataPackGenerator(self.result_dir)
         generator.generate()

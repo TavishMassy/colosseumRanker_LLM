@@ -1,0 +1,43 @@
+Rank,Candidate Name,Risk Level,Email,Phone,Links,Detected Skills,Source File
+1,Alpha Candidate 1,Medium,alpha.candidate.1@gmail.com,+91-9833479486,https://bruno-simon.com,"Rust, Go, Payments, Kafka, Logistics, AWS, Microservices, Kubernetes",Alpha_001_Alpha_Candidate_1.txt
+2,Alpha Candidate 2,Medium,alpha.candidate.2@gmail.com,+91-9897959642,https://bruno-simon.com,"Rust, Go, Payments, Kafka, Logistics, AWS, Microservices, Kubernetes",Alpha_002_Alpha_Candidate_2.txt
+3,Alpha Candidate 4,High,alpha.candidate.4@gmail.com,+91-9855447354,https://github.com/torvalds,"Rust, Go, Payments, Kafka, Logistics, AWS, Microservices, Kubernetes",Alpha_004_Alpha_Candidate_4.txt
+4,Alpha Candidate 3,Low,alpha.candidate.3@gmail.com,+91-9871589175,https://bruno-simon.com,"Rust, Go, Payments, Kafka, Logistics, AWS, Microservices, Kubernetes",Alpha_003_Alpha_Candidate_3.txt
+5,Alpha Candidate 0,Medium,alpha.candidate.0@outlook.com,+91-9834348080,https://leerob.io,"Rust, Go, Payments, Kafka, Logistics, AWS, Microservices, Kubernetes",Alpha_000_Alpha_Candidate_0.txt
+6,Corporate Dev 3,High,corporate.dev.3@outlook.com,+91-9862984943,N/A,"Spring, API, Java",Trap_008_Corporate_Dev_3.txt
+7,Glitch User 2,Medium,glitch.user.2@gmail.comPhone,+91-9813995419,N/A,Java,Glitch_020_Glitch_User_2.txt
+8,Corporate Dev 2,High,corporate.dev.2@outlook.com,+91-9820727728,N/A,"Spring, API, Java",Trap_007_Corporate_Dev_2.txt
+9,Corporate Dev 1,High,corporate.dev.1@gmail.com,+91-9838001762,N/A,"Spring, API, Java",Trap_006_Corporate_Dev_1.txt
+10,Corporate Dev 0,High,corporate.dev.0@outlook.com,+91-9873979948,N/A,"Spring, API, Java",Trap_005_Corporate_Dev_0.txt
+11,Ghost Protocol 0,Medium,N/A,N/A,N/A,,Ghost_015_Ghost_Protocol_0.txt
+12,Ghost Protocol 2,Low,N/A,N/A,N/A,,Ghost_017_Ghost_Protocol_2.txt
+13,Ghost Protocol 1,Low,N/A,N/A,N/A,,Ghost_016_Ghost_Protocol_1.txt
+14,Corporate Dev 4,High,corporate.dev.4@outlook.com,+91-9899127190,N/A,"Spring, API, Java",Trap_009_Corporate_Dev_4.txt
+15,Glitch User 1,Medium,glitch.user.1@gmail.comPhone,+91-9811363618,N/A,Java,Glitch_019_Glitch_User_1.txt
+16,Glitch User 0,Medium,glitch.user.0@outlook.comPhone,+91-9867209546,N/A,Java,Glitch_018_Glitch_User_0.txt
+17,Hopper 1,High,hopper.1@gmail.com,+91-9815364739,N/A,,Hopper_011_Hopper_1.txt
+18,Hopper 3,Medium,hopper.3@gmail.com,+91-9846041478,N/A,,Hopper_013_Hopper_3.txt
+19,Hopper 4,Medium,hopper.4@outlook.com,+91-9818821644,N/A,,Hopper_014_Hopper_4.txt
+20,Hopper 2,Medium,hopper.2@gmail.com,+91-9812815328,N/A,,Hopper_012_Hopper_2.txt
+21,Hopper 0,Medium,hopper.0@outlook.com,+91-9840959097,N/A,,Hopper_010_Hopper_0.txt
+Unqualified,N/A,N/A,alpha.candidate.1@gmail.com,N/A,https://bruno-simon.com,N/A,Alpha_001_Alpha_Candidate_1.txt
+Unqualified,N/A,N/A,alpha.candidate.4@gmail.com,N/A,https://github.com/torvalds,N/A,Alpha_004_Alpha_Candidate_4.txt
+Unqualified,N/A,N/A,alpha.candidate.0@outlook.com,N/A,https://leerob.io,N/A,Alpha_000_Alpha_Candidate_0.txt
+Unqualified,N/A,N/A,N/A,N/A,N/A,N/A,Ghost_015_Ghost_Protocol_0.txt
+Unqualified,N/A,N/A,N/A,N/A,N/A,N/A,Ghost_016_Ghost_Protocol_1.txt
+Unqualified,N/A,N/A,N/A,N/A,N/A,N/A,Ghost_017_Ghost_Protocol_2.txt
+Unqualified,N/A,N/A,alpha.candidate.3@gmail.com,N/A,https://bruno-simon.com,N/A,Alpha_003_Alpha_Candidate_3.txt
+Unqualified,N/A,N/A,alpha.candidate.2@gmail.com,N/A,https://bruno-simon.com,N/A,Alpha_002_Alpha_Candidate_2.txt
+Unqualified,N/A,N/A,corporate.dev.3@outlook.com,N/A,N/A,N/A,Trap_008_Corporate_Dev_3.txt
+Unqualified,N/A,N/A,corporate.dev.0@outlook.com,N/A,N/A,N/A,Trap_005_Corporate_Dev_0.txt
+Unqualified,N/A,N/A,corporate.dev.4@outlook.com,N/A,N/A,N/A,Trap_009_Corporate_Dev_4.txt
+Unqualified,N/A,N/A,corporate.dev.1@gmail.com,N/A,N/A,N/A,Trap_006_Corporate_Dev_1.txt
+Unqualified,N/A,N/A,corporate.dev.2@outlook.com,N/A,N/A,N/A,Trap_007_Corporate_Dev_2.txt
+Unqualified,N/A,N/A,glitch.user.1@gmail.comPhone,N/A,N/A,N/A,Glitch_019_Glitch_User_1.txt
+Unqualified,N/A,N/A,glitch.user.2@gmail.comPhone,N/A,N/A,N/A,Glitch_020_Glitch_User_2.txt
+Unqualified,N/A,N/A,glitch.user.0@outlook.comPhone,N/A,N/A,N/A,Glitch_018_Glitch_User_0.txt
+Unqualified,N/A,N/A,hopper.0@outlook.com,N/A,N/A,N/A,Hopper_010_Hopper_0.txt
+Unqualified,N/A,N/A,hopper.1@gmail.com,N/A,N/A,N/A,Hopper_011_Hopper_1.txt
+Unqualified,N/A,N/A,hopper.4@outlook.com,N/A,N/A,N/A,Hopper_014_Hopper_4.txt
+Unqualified,N/A,N/A,hopper.2@gmail.com,N/A,N/A,N/A,Hopper_012_Hopper_2.txt
+Unqualified,N/A,N/A,hopper.3@gmail.com,N/A,N/A,N/A,Hopper_013_Hopper_3.txt
