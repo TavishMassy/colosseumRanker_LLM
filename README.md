@@ -12,7 +12,7 @@ It operates on a **Hybrid Engine**, capable of switching seamlessly between Clou
 
 ### 1. 🛡️ The "Euro-Local" Hybrid Engine
 
-* **Smart Switching:** Detects API keys to determine whether to use Cloud (Gemini 1.5) or Local (Llama-3) backends.
+* **Smart Switching:** Detects API keys to determine whether to use Cloud (Gemini) or Local (Llama-3) backends.
 * **Sandwich Context Strategy:** For local models with limited context (e.g., 4k tokens), it uses a "Sliding Window" technique to process massive resumes without forgetting instructions or output formats.
 * **Vision Rescue:** An "Oracle" module uses Vision LLMs to OCR and rescue image-based resumes from the quarantine folder.
 
