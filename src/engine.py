@@ -21,10 +21,7 @@ USAGE_FILE = Path("data/usage_log.json")
 # ----------------------------
 
 class Engine:
-    def __init__(self):
-        if not API_KEY:
-            raise ValueError("No API Key found. Please set GEMINI_API_KEY.")
-            
+    def __init__(self):     
         self.api_key = API_KEY
         self.backup = LocalEngine()
         self.is_cloud_alive = True
