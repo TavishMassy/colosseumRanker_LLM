@@ -13,7 +13,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.backup_engine import LocalEngine 
 
 # --- ENGINE CONFIGURATION ---
-API_KEY = ""
+API_KEY = os.getenv("GEMINI_API_KEY")
 MODEL_NAME = "gemini-flash-latest"
 VLM_NAME = "gemini-flash-lite-latest"
 TOKEN_LIMIT = 800000
@@ -22,6 +22,9 @@ USAGE_FILE = Path("data/usage_log.json")
 
 class Engine:
     def __init__(self):
+        if not API_KEY:
+            raise ValueError("No API Key found. Please set GEMINI_API_KEY.")
+            
         self.api_key = API_KEY
         self.backup = LocalEngine()
         self.is_cloud_alive = True
